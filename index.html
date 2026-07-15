@@ -589,19 +589,10 @@
 </div>
 
 <script>
-const BV_ID = {
-  'comp-zhangjiajie.mp4': 'BV1WENz6wEUf',
-  'comp-shaoshan.mp4': 'BV1AENz6wEZ2',
-  'comp-chenggu.mp4': 'BV1PENz6AEDq',
-  'comp-particle.mp4': 'BV1WENz6wESk',
-  '3d-gripper.m4v': 'BV1WENz6wE4g',
-  '3d-5g.mp4': 'BV1PENz6wEhv',
-  '3d-tianwen.mp4': 'BV1PENz6wExZ',
-  '3d-factory.mp4': 'BV1WENz6wEfS',
-  '3d-c4d.mov': 'BV1WENz6wEyQ',
-  '3d-screen.mp4': 'BV1sENz6wEuv'
-};
-function biliUrl(bv) { return '//player.bilibili.com/player.html?bvid=' + bv + '&autoplay=1&high_quality=1&danmaku=0'; }
+const M = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
+const REPO = '/videos/';
+const IN_REPO = {'3d-tianwen.mp4':1, '3d-gripper.m4v':1, '3d-screen.mp4':1};
+function vidUrl(f) { return IN_REPO[f] ? REPO + f : M + f; }
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80));
@@ -616,14 +607,25 @@ const fadeObs = new IntersectionObserver(entries => {
 document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
 
 // Showreel - open in lightbox
-var REEL_BV = 'BV1J4Nz6dEtB';
 function openShowreel() {
   var inner = document.getElementById('lightboxInner');
-  if (REEL_BV) {
-    inner.innerHTML = lbToolbar()
-      + '<iframe src="' + biliUrl(REEL_BV) + '" scrolling="no" frameborder="0" allowfullscreen="true" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts" style="width:100%;aspect-ratio:16/9;border-radius:8px;background:#000;display:block;"></iframe>'
-      + '<div class="lightbox-title">作品集锦 &middot; Showreel</div>';
-  }
+  var reelSrc = M + 'showreel.mp4';
+  inner.innerHTML = lbToolbar()
+    + '<video id="lbVideo" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
+    + '<source src="' + reelSrc + '" type="video/mp4">'
+    + '</video>'
+    + '<div id="lbFallback" style="display:none;text-align:center;padding:60px 20px;">'
+    + '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'
+    + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">该视频建议在电脑端浏览<br><span style="font-size:12px;color:rgba(255,255,255,0.3);">以获得最佳播放体验</span></p>'
+    + '</div>'
+    + '<div class="lightbox-title">作品集锦 &middot; Showreel</div>';
+  var vid = document.getElementById('lbVideo');
+  var srcEl = vid.querySelector('source');
+  function showFallback() { vid.style.display = 'none'; document.getElementById('lbFallback').style.display = 'block'; }
+  srcEl.addEventListener('error', showFallback);
+  vid.addEventListener('error', showFallback);
+  var loadTimer = setTimeout(function() { if (vid.readyState === 0 && vid.networkState !== 1) showFallback(); }, 8000);
+  vid.addEventListener('loadeddata', function() { clearTimeout(loadTimer); });
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -645,7 +647,8 @@ function toggleMaximize(e) {
 }
 function toggleFullscreen(e) {
   e.stopPropagation();
-  var target = document.getElementById('lightboxInner');
+  var vid = document.getElementById('lbVideo');
+  var target = vid || document.getElementById('lightboxInner');
   if (document.fullscreenElement) document.exitFullscreen();
   else if (target.requestFullscreen) target.requestFullscreen();
   else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
@@ -697,12 +700,23 @@ function openCard(el) {
 
   if (type === 'video') {
     const videoFile = el.getAttribute('data-video');
-    const bv = BV_ID[videoFile];
-    if (bv) {
-      inner.innerHTML = lbToolbar()
-        + '<iframe src="' + biliUrl(bv) + '" scrolling="no" frameborder="0" allowfullscreen="true" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts" style="width:100%;aspect-ratio:16/9;border-radius:8px;background:#000;display:block;"></iframe>'
-        + '<div class="lightbox-title">' + title + '</div>';
-    }
+    const src = vidUrl(videoFile);
+    inner.innerHTML = lbToolbar()
+      + '<video id="lbVideo" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
+      + '<source src="' + src + '" type="video/mp4">'
+      + '</video>'
+      + '<div id="lbFallback" style="display:none;text-align:center;padding:60px 20px;">'
+      + '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'
+      + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">该视频建议在电脑端浏览<br><span style="font-size:12px;color:rgba(255,255,255,0.3);">以获得最佳播放体验</span></p>'
+      + '</div>'
+      + '<div class="lightbox-title">' + title + '</div>';
+    var vid = document.getElementById('lbVideo');
+    var srcEl = vid.querySelector('source');
+    function showFallback() { vid.style.display = 'none'; document.getElementById('lbFallback').style.display = 'block'; }
+    srcEl.addEventListener('error', showFallback);
+    vid.addEventListener('error', showFallback);
+    var loadTimer = setTimeout(function() { if (vid.readyState === 0 && vid.networkState !== 1) showFallback(); }, 8000);
+    vid.addEventListener('loadeddata', function() { clearTimeout(loadTimer); });
   } else if (type === 'still') {
     initGallery();
     var idx = galleryCards.indexOf(el);
