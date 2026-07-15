@@ -573,8 +573,6 @@ function playShowreel() {
   v.load();
   v.play();
   document.getElementById('reelOverlay').classList.add('hidden');
-  if (v.requestFullscreen) v.requestFullscreen();
-  else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
   v.addEventListener('ended', () => {
     document.getElementById('reelOverlay').classList.remove('hidden');
   }, { once: true });
@@ -610,12 +608,6 @@ function openCard(el) {
         document.getElementById('lbFallback').style.display = 'block';
       });
     }
-    setTimeout(function() {
-      var vid = document.getElementById('lbVideo');
-      if (vid && vid.requestFullscreen) vid.requestFullscreen();
-      else if (vid && vid.webkitRequestFullscreen) vid.webkitRequestFullscreen();
-      else if (vid && vid.msRequestFullscreen) vid.msRequestFullscreen();
-    }, 300);
   } else {
     const imgFile = el.getAttribute('data-img');
     const src = imgFile.startsWith('images/') ? imgFile : M + imgFile;
@@ -628,25 +620,35 @@ function openCard(el) {
   document.body.style.overflow = 'hidden';
 }
 
+function stopAllMedia() {
+  // Stop lightbox video
+  var vid = document.getElementById('lbVideo');
+  if (vid) { vid.pause(); vid.currentTime = 0; vid.src = ''; vid.load(); }
+  // Stop showreel video
+  var reel = document.getElementById('showreelVideo');
+  if (reel && !reel.paused) { reel.pause(); reel.currentTime = 0; }
+  // Exit fullscreen if active
+  if (document.fullscreenElement) document.exitFullscreen();
+  else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+}
+
 function closeLightbox(e) {
   if (e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
-    var vid = document.getElementById('lbVideo');
-    if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+    stopAllMedia();
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    var vid = document.getElementById('lbVideo');
-    if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
+    stopAllMedia();
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
+});
+// Stop all media when user switches tabs or minimizes window
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopAllMedia();
 });
 </script>
 
