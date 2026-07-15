@@ -15,13 +15,12 @@
     background: #0a0a0a;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
   a { color: inherit; text-decoration: none; }
-  img { display: block; max-width: 100%; }
+  img, video { display: block; max-width: 100%; }
 
-  /* ===== NAV ===== */
+  /* NAV */
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     display: flex; justify-content: space-between; align-items: center;
@@ -36,31 +35,21 @@
   .nav-links { display: flex; gap: 36px; list-style: none; }
   .nav-links a {
     font-size: 12px; font-weight: 500; letter-spacing: 1.5px;
-    color: rgba(255,255,255,0.45); transition: color 0.25s;
-    text-transform: uppercase;
+    color: rgba(255,255,255,0.45); transition: color 0.25s; text-transform: uppercase;
   }
   .nav-links a:hover { color: #fff; }
   .nav-toggle { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
   .nav-toggle span { display: block; width: 22px; height: 1.5px; background: #fff; transition: 0.3s; }
 
-  /* ===== HERO ===== */
+  /* HERO */
   .hero {
     height: 100vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center; text-align: center;
     position: relative; background: #0a0a0a;
   }
-  .hero h1 {
-    font-size: 72px; font-weight: 700; letter-spacing: 16px;
-    color: #fff; margin-bottom: 20px;
-  }
-  .hero .subtitle {
-    font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.6);
-    letter-spacing: 6px; margin-bottom: 14px;
-  }
-  .hero .tagline {
-    font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.3);
-    letter-spacing: 2px;
-  }
+  .hero h1 { font-size: 72px; font-weight: 700; letter-spacing: 16px; color: #fff; margin-bottom: 20px; }
+  .hero .subtitle { font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.6); letter-spacing: 6px; margin-bottom: 14px; }
+  .hero .tagline { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 2px; }
   .hero .tagline .sep { margin: 0 8px; opacity: 0.4; }
   .scroll-hint {
     position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
@@ -68,10 +57,7 @@
     color: rgba(255,255,255,0.2); font-size: 9px; letter-spacing: 3px;
     animation: scrollFloat 2.4s ease-in-out infinite;
   }
-  .scroll-hint .arrow-down {
-    width: 1px; height: 28px; background: rgba(255,255,255,0.15);
-    position: relative;
-  }
+  .scroll-hint .arrow-down { width: 1px; height: 28px; background: rgba(255,255,255,0.15); position: relative; }
   .scroll-hint .arrow-down::after {
     content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
     border-left: 4px solid transparent; border-right: 4px solid transparent;
@@ -82,55 +68,32 @@
     50% { transform: translateX(-50%) translateY(10px); opacity: 0.4; }
   }
 
-  /* ===== SECTION COMMON ===== */
+  /* SECTION */
   .section { max-width: 1280px; margin: 0 auto; padding: 120px 60px; }
-  .section-label {
-    font-size: 10px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 4px; color: rgba(255,255,255,0.25); margin-bottom: 8px;
-  }
-  .section-title {
-    font-size: 28px; font-weight: 600; color: #fff;
-    letter-spacing: 2px; margin-bottom: 56px;
-  }
-  .divider {
-    width: 40px; height: 1px; background: rgba(255,255,255,0.15);
-    margin-bottom: 16px;
-  }
+  .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 4px; color: rgba(255,255,255,0.25); margin-bottom: 8px; }
+  .section-title { font-size: 28px; font-weight: 600; color: #fff; letter-spacing: 2px; margin-bottom: 56px; }
+  .divider { width: 40px; height: 1px; background: rgba(255,255,255,0.15); margin-bottom: 16px; }
 
-  /* ===== COMPOSITING SECTION ===== */
-  .comp-layout {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 24px;
-  }
+  /* COMPOSITING */
+  .comp-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
   .comp-main { position: relative; }
   .comp-side { display: flex; flex-direction: column; gap: 16px; }
 
-  /* Card base */
+  /* CARD */
   .card {
     position: relative; border-radius: 6px; overflow: hidden;
     background: #141414; cursor: pointer;
     transition: transform 0.35s ease, box-shadow 0.35s ease;
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  }
-  .card-thumb {
-    position: relative; aspect-ratio: 16/9; overflow: hidden;
-    background: #1a1a1a;
-  }
-  .card-thumb img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.5s ease; opacity: 0.85;
-  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .card-thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #1a1a1a; }
+  .card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; opacity: 0.85; }
   .card:hover .card-thumb img { transform: scale(1.04); opacity: 1; }
   .card-thumb .play-overlay {
     position: absolute; inset: 0;
     display: flex; justify-content: center; align-items: center;
-    background: rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s;
+    background: rgba(0,0,0,0.25); transition: opacity 0.3s;
   }
-  .card:hover .play-overlay { opacity: 1; }
   .play-btn {
     width: 52px; height: 52px; border-radius: 50%;
     border: 2px solid rgba(255,255,255,0.7);
@@ -147,128 +110,100 @@
     margin-left: 4px;
   }
   .card-info { padding: 16px 20px 20px; }
-  .card-name {
-    font-size: 14px; font-weight: 600; color: #fff;
-    margin-bottom: 6px; letter-spacing: 0.5px;
-  }
-  .card-desc {
-    font-size: 12px; color: rgba(255,255,255,0.4);
-    margin-bottom: 10px; line-height: 1.5;
-  }
+  .card-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; }
+  .card-desc { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 10px; line-height: 1.5; }
   .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
   .tag {
     font-size: 10px; color: rgba(255,255,255,0.45);
     border: 1px solid rgba(255,255,255,0.1);
-    padding: 2px 8px; border-radius: 3px; letter-spacing: 0.3px;
-    white-space: nowrap;
+    padding: 2px 8px; border-radius: 3px; letter-spacing: 0.3px; white-space: nowrap;
   }
-
-  /* Main card bigger */
   .comp-main .card-name { font-size: 18px; }
   .comp-main .card-desc { font-size: 13px; }
-
-  /* Side cards smaller */
   .comp-side .card-info { padding: 12px 16px 14px; }
   .comp-side .card-name { font-size: 13px; }
   .comp-side .card-thumb .play-btn { width: 40px; height: 40px; }
-  .comp-side .card-thumb .play-btn::after {
-    border-left-width: 10px; border-top-width: 6px; border-bottom-width: 6px;
-    margin-left: 3px;
-  }
+  .comp-side .card-thumb .play-btn::after { border-left-width: 10px; border-top-width: 6px; border-bottom-width: 6px; margin-left: 3px; }
 
-  /* ===== 3D ANIMATION GRID ===== */
-  .anim-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
+  /* 3D ANIMATION GRID */
+  .anim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .anim-grid .card-name { font-size: 13px; }
   .anim-grid .card-info { padding: 14px 16px 16px; }
 
-  /* ===== STILLS GRID ===== */
-  .stills-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
+  /* STILLS GRID */
+  .stills-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
   .still-card {
     position: relative; border-radius: 6px; overflow: hidden;
-    cursor: pointer; transition: transform 0.3s;
-    background: #141414;
+    cursor: pointer; transition: transform 0.3s; background: #141414;
   }
   .still-card:hover { transform: scale(1.02); }
-  .still-card .still-img {
-    width: 100%; aspect-ratio: 4/3; object-fit: cover;
-    opacity: 0.85; transition: opacity 0.3s;
-  }
+  .still-card .still-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; opacity: 0.85; transition: opacity 0.3s; }
   .still-card:hover .still-img { opacity: 1; }
-  .still-card .still-label {
-    padding: 10px 12px; font-size: 11px; color: rgba(255,255,255,0.5);
-    letter-spacing: 0.3px;
-  }
-  /* Make first item span 2 cols for visual variety */
+  .still-card .still-label { padding: 10px 12px; font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.3px; }
   .still-card:nth-child(1) { grid-column: span 2; }
   .still-card:nth-child(1) .still-img { aspect-ratio: 8/3; }
 
-  /* ===== SHOWREEL ===== */
-  .showreel-section {
-    padding: 120px 60px;
-    text-align: center;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  /* SHOWREEL */
+  .showreel-section { padding: 120px 60px; text-align: center; max-width: 1100px; margin: 0 auto; }
   .showreel-player {
     position: relative; aspect-ratio: 16/9; max-width: 960px;
     margin: 0 auto 24px; border-radius: 8px; overflow: hidden;
-    background: #141414; cursor: pointer;
-    transition: box-shadow 0.4s;
+    background: #141414;
   }
-  .showreel-player:hover {
-    box-shadow: 0 0 80px rgba(255,255,255,0.04);
+  .showreel-player video {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
   }
-  .showreel-player img {
-    width: 100%; height: 100%; object-fit: cover; opacity: 0.6;
-    transition: opacity 0.4s;
-  }
-  .showreel-player:hover img { opacity: 0.8; }
-  .showreel-play {
+  .showreel-player .reel-overlay {
     position: absolute; inset: 0;
     display: flex; justify-content: center; align-items: center;
+    background: rgba(0,0,0,0.3);
+    transition: opacity 0.3s;
+    cursor: pointer;
   }
-  .showreel-play .play-btn {
-    width: 72px; height: 72px;
-    border-width: 2px;
+  .showreel-player .reel-overlay.hidden { opacity: 0; pointer-events: none; }
+  .showreel-play {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.7);
+    display: flex; justify-content: center; align-items: center;
+    transition: transform 0.3s;
   }
-  .showreel-play .play-btn::after {
-    border-left-width: 18px; border-top-width: 11px; border-bottom-width: 11px;
+  .showreel-player .reel-overlay:hover .showreel-play { transform: scale(1.1); }
+  .showreel-play::after {
+    content: ""; display: block;
+    width: 0; height: 0;
+    border-left: 18px solid rgba(255,255,255,0.85);
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
     margin-left: 5px;
   }
-  .showreel-note {
-    font-size: 13px; color: rgba(255,255,255,0.3);
-    letter-spacing: 1px;
-  }
+  .showreel-note { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
 
-  /* ===== LIGHTBOX ===== */
+  /* LIGHTBOX */
   .lightbox {
     position: fixed; inset: 0; z-index: 9999;
     display: flex; justify-content: center; align-items: center;
-    background: rgba(0,0,0,0.92);
+    background: rgba(0,0,0,0.94);
     opacity: 0; pointer-events: none;
     transition: opacity 0.35s ease;
   }
   .lightbox.active { opacity: 1; pointer-events: all; }
   .lightbox-inner {
-    position: relative; width: 90%; max-width: 960px;
-    background: #000; border-radius: 8px;
-    overflow: visible;
+    position: relative; width: 92%; max-width: 1000px;
     transform: scale(0.95); transition: transform 0.35s ease;
   }
   .lightbox.active .lightbox-inner { transform: scale(1); }
-  .lightbox-inner img.still-full {
-    width: 100%; height: auto; display: block; border-radius: 8px;
-  }
   .lightbox-inner video {
-    width: 100%; height: auto; display: block; border-radius: 8px;
+    width: 100%; border-radius: 8px; background: #000;
+    max-height: 80vh; display: block;
+  }
+  .lightbox-inner img.still-full {
+    width: 100%; border-radius: 8px; display: block;
+    max-height: 85vh; object-fit: contain;
+  }
+  .lightbox-title {
+    text-align: center; padding: 14px 0 0;
+    font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px;
   }
   .lightbox-close {
     position: absolute; top: -44px; right: 0;
@@ -283,93 +218,35 @@
   .lightbox-close::after { transform: rotate(-45deg); }
   .lightbox-close:hover::before, .lightbox-close:hover::after { background: #fff; }
 
-  /* Video link button in lightbox */
-  .video-link-bar {
-    padding: 16px 20px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .video-link-bar .vtitle {
-    font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 500;
-  }
-  .video-link-bar .vbtn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 18px;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 4px;
-    font-size: 12px; font-weight: 500;
-    color: rgba(255,255,255,0.8);
-    transition: all 0.2s; cursor: pointer;
-    background: none;
-  }
-  .video-link-bar .vbtn:hover {
-    border-color: rgba(255,255,255,0.5);
-    color: #fff;
-    background: rgba(255,255,255,0.06);
-  }
-  .video-link-bar .vbtn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
-
-  /* ===== FOOTER ===== */
-  .footer {
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 64px 60px 40px;
-  }
-  .footer-inner {
-    max-width: 1280px; margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 40px;
-    align-items: start;
-  }
-  .footer-left .footer-name {
-    font-size: 20px; font-weight: 700; color: #fff;
-    letter-spacing: 3px; margin-bottom: 8px;
-  }
-  .footer-left .footer-desc {
-    font-size: 13px; color: rgba(255,255,255,0.35);
-    margin-bottom: 20px; line-height: 1.6;
-  }
-  .footer-contact {
-    display: flex; gap: 24px; flex-wrap: wrap;
-  }
-  .footer-contact a {
-    font-size: 12px; color: rgba(255,255,255,0.5);
-    letter-spacing: 0.5px; transition: color 0.2s;
-    display: flex; align-items: center; gap: 6px;
-  }
+  /* FOOTER */
+  .footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 64px 60px 40px; }
+  .footer-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: start; }
+  .footer-left .footer-name { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 3px; margin-bottom: 8px; }
+  .footer-left .footer-desc { font-size: 13px; color: rgba(255,255,255,0.35); margin-bottom: 20px; line-height: 1.6; }
+  .footer-contact { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-contact a { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; transition: color 0.2s; }
   .footer-contact a:hover { color: #fff; }
   .footer-right { display: flex; align-items: center; }
   .btn-resume {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 28px;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
-    font-size: 12px; font-weight: 500;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
-    transition: all 0.25s;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+    font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.7); transition: all 0.25s;
   }
-  .btn-resume:hover {
-    border-color: rgba(255,255,255,0.5);
-    color: #fff;
-    background: rgba(255,255,255,0.05);
-  }
+  .btn-resume:hover { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.05); }
   .btn-resume svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
   .footer-copy {
-    max-width: 1280px; margin: 40px auto 0;
-    padding-top: 24px;
+    max-width: 1280px; margin: 40px auto 0; padding-top: 24px;
     border-top: 1px solid rgba(255,255,255,0.04);
-    font-size: 11px; color: rgba(255,255,255,0.2);
-    letter-spacing: 0.5px; text-align: center;
+    font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 0.5px; text-align: center;
   }
 
-  /* ===== FADE IN ===== */
-  .fade-up {
-    opacity: 0; transform: translateY(32px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
+  /* FADE IN */
+  .fade-up { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-  /* ===== RESPONSIVE ===== */
+  /* RESPONSIVE */
   @media (max-width: 1024px) {
     .section { padding: 80px 40px; }
     .showreel-section { padding: 80px 40px; }
@@ -385,8 +262,7 @@
     .nav-links.open {
       display: flex; flex-direction: column;
       position: absolute; top: 100%; left: 0; right: 0;
-      background: rgba(10,10,10,0.96);
-      padding: 20px 24px; gap: 16px;
+      background: rgba(10,10,10,0.96); padding: 20px 24px; gap: 16px;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .nav-toggle { display: flex; }
@@ -402,7 +278,6 @@
     .showreel-section { padding: 64px 20px; }
     .footer { padding: 48px 24px 32px; }
     .footer-inner { grid-template-columns: 1fr; gap: 24px; }
-    .footer-right { justify-content: flex-start; }
   }
   @media (max-width: 480px) {
     .hero h1 { font-size: 32px; letter-spacing: 8px; }
@@ -415,7 +290,6 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav" id="nav">
   <a href="#" class="logo">LI JIE</a>
   <ul class="nav-links" id="navLinks">
@@ -434,15 +308,8 @@
 <section class="hero" id="hero">
   <h1>李&nbsp;&nbsp;杰</h1>
   <div class="subtitle">影视后期合成师 &nbsp;/&nbsp; 三维动效师</div>
-  <div class="tagline">
-    一个人就是一支后期团队
-    <span class="sep">|</span>
-    AE合成 &times; C4D &times; Redshift
-  </div>
-  <div class="scroll-hint">
-    <span>SCROLL</span>
-    <div class="arrow-down"></div>
-  </div>
+  <div class="tagline">一个人就是一支后期团队 <span class="sep">|</span> AE合成 &times; C4D &times; Redshift</div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="arrow-down"></div></div>
 </section>
 
 <!-- COMPOSITING -->
@@ -450,69 +317,54 @@
   <div class="section-label">COMPOSITING</div>
   <div class="divider"></div>
   <div class="section-title">后期合成 &middot; AE 特效包装</div>
-
   <div class="comp-layout fade-up">
-    <!-- Main card -->
     <div class="comp-main">
-      <div class="card" data-title="张家界旅游景区展馆全息项目" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-zhangjiajie.mp4" onclick="openVideoCard(this)">
+      <div class="card" data-title="张家界旅游景区展馆全息项目" data-video="comp-zhangjiajie.mp4" data-type="video" onclick="openCard(this)">
         <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="张家界旅游景区展馆">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="张家界">
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
           <div class="card-name">张家界旅游景区展馆全息项目</div>
-          <div class="card-desc">独立完成全部镜头，涵盖全息投影、粒子特效与沉浸式场景合成</div>
+          <div class="card-desc">独立完成全部镜头：xp 粒子特效、TFD 烟雾、布料模拟、AE 多层合成</div>
           <div class="card-tags">
-            <span class="tag">xp 粒子特效</span>
-            <span class="tag">TFD 烟雾模拟</span>
-            <span class="tag">布料运算</span>
-            <span class="tag">AE 多层合成</span>
+            <span class="tag">xp 粒子特效</span><span class="tag">TFD 烟雾模拟</span>
+            <span class="tag">布料运算</span><span class="tag">AE 多层合成</span>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Side cards -->
     <div class="comp-side">
-      <div class="card" data-title="陕西城固宣传片" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-chenggu.mp4" onclick="openVideoCard(this)">
+      <div class="card" data-title="湖南韶山&ldquo;红色骄阳&rdquo;" data-video="comp-shaoshan.mp4" data-type="video" onclick="openCard(this)">
         <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="陕西城固宣传片">
-          <div class="play-overlay"><div class="play-btn"></div></div>
-        </div>
-        <div class="card-info">
-          <div class="card-name">陕西城固宣传片</div>
-          <div class="card-tags">
-            <span class="tag">AE 合成</span>
-            <span class="tag">调色</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" data-title="AE粒子大屏背景互动墙" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-particle.mp4" onclick="openVideoCard(this)">
-        <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="AE粒子大屏">
-          <div class="play-overlay"><div class="play-btn"></div></div>
-        </div>
-        <div class="card-info">
-          <div class="card-name">AE 粒子大屏背景互动墙</div>
-          <div class="card-tags">
-            <span class="tag">AE 粒子特效</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" data-title="湖南韶山&ldquo;红色骄阳&rdquo;" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-shaoshan.mp4" onclick="openVideoCard(this)">
-        <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg" alt="湖南韶山红色骄阳">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg" alt="湖南韶山">
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
           <div class="card-name">湖南韶山&ldquo;红色骄阳&rdquo;</div>
           <div class="card-tags">
-            <span class="tag">文旅宣传</span>
-            <span class="tag">全息舞美</span>
-            <span class="tag">AE 合成</span>
+            <span class="tag">文旅宣传</span><span class="tag">全息舞美</span><span class="tag">AE 合成</span>
           </div>
+        </div>
+      </div>
+      <div class="card" data-title="陕西城固宣传片" data-video="comp-chenggu.mp4" data-type="video" onclick="openCard(this)">
+        <div class="card-thumb">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="城固">
+          <div class="play-overlay"><div class="play-btn"></div></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">陕西城固宣传片</div>
+          <div class="card-tags"><span class="tag">AE 合成</span><span class="tag">调色</span></div>
+        </div>
+      </div>
+      <div class="card" data-title="AE 粒子大屏背景互动墙" data-video="comp-particle.mp4" data-type="video" onclick="openCard(this)">
+        <div class="card-thumb">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="大屏互动">
+          <div class="play-overlay"><div class="play-btn"></div></div>
+        </div>
+        <div class="card-info">
+          <div class="card-name">AE 粒子大屏背景互动墙</div>
+          <div class="card-tags"><span class="tag">AE 粒子特效</span></div>
         </div>
       </div>
     </div>
@@ -524,83 +376,65 @@
   <div class="section-label">3D ANIMATION</div>
   <div class="divider"></div>
   <div class="section-title">三维动画 &middot; Redshift 渲染 &middot; AE 合成</div>
-
   <div class="anim-grid fade-up">
-    <div class="card" data-title="工业动画抓包机演示" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-gripper.m4v" onclick="openVideoCard(this)">
+    <div class="card" data-title="工业动画抓包机演示" data-video="3d-gripper.m4v" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
         <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg" alt="抓包机">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
         <div class="card-name">工业动画抓包机演示</div>
-        <div class="card-tags">
-          <span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span>
-        </div>
+        <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-
-    <div class="card" data-title="中国移动 5G" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-5g.mp4" onclick="openVideoCard(this)">
+    <div class="card" data-title="中国移动 5G" data-video="3d-5g.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="中国移动5G">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="5G">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
         <div class="card-name">中国移动 5G</div>
-        <div class="card-tags">
-          <span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span>
-        </div>
+        <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-
-    <div class="card" data-title="航天 · 天问一号" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-tianwen.mp4" onclick="openVideoCard(this)">
+    <div class="card" data-title="航天 · 天问一号" data-video="3d-tianwen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
         <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="天问一号">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
         <div class="card-name">航天 &middot; 天问一号</div>
-        <div class="card-tags">
-          <span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span>
-        </div>
+        <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-
-    <div class="card" data-title="中智建工厂" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-factory.mp4" onclick="openVideoCard(this)">
+    <div class="card" data-title="中智建工厂" data-video="3d-factory.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="中智建工厂">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="工厂">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
         <div class="card-name">中智建工厂</div>
-        <div class="card-tags">
-          <span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span>
-        </div>
+        <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-
-    <div class="card" data-title="C4D 动效动画" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-c4d.mov" onclick="openVideoCard(this)">
+    <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mov" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
         <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="C4D动效">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
         <div class="card-name">C4D 动效动画</div>
-        <div class="card-tags">
-          <span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span>
-        </div>
+        <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-
-    <div class="card" data-title="中国移动大屏" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-screen.mp4" onclick="openVideoCard(this)">
+    <div class="card" data-title="中国移动大屏" data-video="3d-screen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="中国移动大屏">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="大屏">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
         <div class="card-name">中国移动大屏</div>
-        <div class="card-tags">
-          <span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span>
-        </div>
+        <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
   </div>
@@ -611,33 +445,32 @@
   <div class="section-label">STILL RENDERS</div>
   <div class="divider"></div>
   <div class="section-title">三维静帧 &middot; Redshift 渲染 &middot; 工业厂区效果图</div>
-
   <div class="stills-grid fade-up">
-    <div class="still-card" onclick="openStill(this)" data-title="工业厂区全景" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png">
-      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="工业厂区全景">
+    <div class="still-card" data-type="still" data-title="工业厂区全景" data-img="still1.png" onclick="openCard(this)">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="厂区全景">
       <div class="still-label">工业厂区全景</div>
     </div>
-    <div class="still-card" onclick="openStill(this)" data-title="设备车间渲染" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png">
+    <div class="still-card" data-type="still" data-title="设备车间渲染" data-img="still2.png" onclick="openCard(this)">
       <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="设备车间">
       <div class="still-label">设备车间渲染</div>
     </div>
-    <div class="still-card" onclick="openStill(this)" data-title="管道系统建模" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png">
+    <div class="still-card" data-type="still" data-title="管道系统建模" data-img="still3.png" onclick="openCard(this)">
       <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="管道系统">
       <div class="still-label">管道系统建模</div>
     </div>
-    <div class="still-card" onclick="openStill(this)" data-title="产品细节特写" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg">
+    <div class="still-card" data-type="still" data-title="产品细节特写" data-img="still4.jpg" onclick="openCard(this)">
       <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg" alt="产品特写">
       <div class="still-label">产品细节特写</div>
     </div>
-    <div class="still-card" onclick="openStill(this)" data-title="厂区鸟瞰图" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png">
+    <div class="still-card" data-type="still" data-title="厂区鸟瞰图" data-img="still5.png" onclick="openCard(this)">
       <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="厂区鸟瞰">
       <div class="still-label">厂区鸟瞰图</div>
     </div>
-    <div class="still-card" onclick="openStill(this)" data-title="机械设备展示" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png">
+    <div class="still-card" data-type="still" data-title="机械设备展示" data-img="still6.png" onclick="openCard(this)">
       <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="机械设备">
       <div class="still-label">机械设备展示</div>
     </div>
-    <div class="still-card" onclick="openStill(this)" data-title="室内空间渲染" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg">
+    <div class="still-card" data-type="still" data-title="室内空间渲染" data-img="still7.jpg" onclick="openCard(this)">
       <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg" alt="室内空间">
       <div class="still-label">室内空间渲染</div>
     </div>
@@ -649,10 +482,13 @@
   <div class="section-label">SHOWREEL</div>
   <div class="divider" style="margin:0 auto 16px;"></div>
   <div class="section-title" style="text-align:center;">作品集锦 &middot; Showreel</div>
-
-  <div class="showreel-player fade-up" data-title="作品集锦 Showreel" onclick="openVideoCard(this)" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-zhangjiajie.mp4">
-    <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="Showreel">
-    <div class="showreel-play"><div class="play-btn"></div></div>
+  <div class="showreel-player fade-up">
+    <video id="showreelVideo" preload="none" playsinline>
+      <source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/showreel.mp4" type="video/mp4">
+    </video>
+    <div class="reel-overlay" id="reelOverlay" onclick="playShowreel()">
+      <div class="showreel-play"></div>
+    </div>
   </div>
   <div class="showreel-note">所有片段来自本人独立完成项目</div>
 </section>
@@ -691,60 +527,75 @@
 </div>
 
 <script>
-  // Media base URL
-  const MEDIA = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
+const M = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
 
-  // Nav scroll
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 80);
-  });
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80));
 
-  // Close mobile nav on link click
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
-  });
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
 
-  // Fade-in observer
-  const fadeObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
 
-  // Open video card — opens video in new tab for playback
-  function openVideoCard(el) {
-    const videoUrl = el.getAttribute('data-video');
-    if (videoUrl) {
-      window.open(videoUrl, '_blank');
-    }
-  }
+// Showreel play
+function playShowreel() {
+  const v = document.getElementById('showreelVideo');
+  v.load();
+  v.play();
+  document.getElementById('reelOverlay').classList.add('hidden');
+  v.addEventListener('ended', () => {
+    document.getElementById('reelOverlay').classList.remove('hidden');
+  }, { once: true });
+}
 
-  // Open still image in lightbox
-  function openStill(el) {
-    const imgUrl = el.getAttribute('data-img');
-    const title = el.getAttribute('data-title') || '';
-    const inner = document.getElementById('lightboxInner');
+// Open card (video or still)
+function openCard(el) {
+  const type = el.getAttribute('data-type');
+  const title = el.getAttribute('data-title') || '';
+  const inner = document.getElementById('lightboxInner');
+
+  if (type === 'video') {
+    const videoFile = el.getAttribute('data-video');
+    const src = M + videoFile;
     inner.innerHTML = '<div class="lightbox-close" onclick="closeLightbox(event)"></div>'
-      + '<img class="still-full" src="' + imgUrl + '" alt="' + title + '">'
-      + '<div class="video-link-bar"><span class="vtitle">' + title + '</span></div>';
-    document.getElementById('lightbox').classList.add('active');
-    document.body.style.overflow = 'hidden';
+      + '<video controls autoplay playsinline preload="auto">'
+      + '<source src="' + src + '" type="video/mp4">'
+      + '</video>'
+      + '<div class="lightbox-title">' + title + '</div>';
+  } else {
+    const imgFile = el.getAttribute('data-img');
+    const src = M + imgFile;
+    inner.innerHTML = '<div class="lightbox-close" onclick="closeLightbox(event)"></div>'
+      + '<img class="still-full" src="' + src + '" alt="' + title + '">'
+      + '<div class="lightbox-title">' + title + '</div>';
   }
 
-  // Close lightbox
-  function closeLightbox(e) {
-    if (e.target === document.getElementById('lightbox') ||
-        e.target.classList.contains('lightbox-close')) {
-      document.getElementById('lightbox').classList.remove('active');
-      document.body.style.overflow = '';
-    }
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(e) {
+  if (e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
+    // Stop any playing video
+    const vid = document.querySelector('#lightboxInner video');
+    if (vid) { vid.pause(); vid.src = ''; }
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
   }
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.getElementById('lightbox').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const vid = document.querySelector('#lightboxInner video');
+    if (vid) { vid.pause(); vid.src = ''; }
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
 </script>
 
 </body>
