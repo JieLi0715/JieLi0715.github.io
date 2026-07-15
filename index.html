@@ -253,22 +253,18 @@
   /* Gallery nav arrows */
   .lb-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
-    width: 48px; height: 48px; cursor: pointer;
+    width: 44px; height: 44px; cursor: pointer;
     display: flex; justify-content: center; align-items: center;
-    border-radius: 50%; background: rgba(255,255,255,0.08);
-    border: none; outline: none; transition: background 0.2s;
-    z-index: 10;
+    border-radius: 50%; background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
+    outline: none; transition: background 0.2s, border-color 0.2s;
+    z-index: 10; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
   }
-  .lb-arrow:hover { background: rgba(255,255,255,0.2); }
-  .lb-arrow svg { width: 22px; height: 22px; stroke: rgba(255,255,255,0.7); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .lb-arrow:hover { background: rgba(0,0,0,0.55); border-color: rgba(255,255,255,0.3); }
+  .lb-arrow svg { width: 22px; height: 22px; stroke: rgba(255,255,255,0.85); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
   .lb-arrow:hover svg { stroke: #fff; }
-  .lb-arrow.prev { left: -60px; }
-  .lb-arrow.next { right: -60px; }
-  @media (max-width: 1024px) {
-    .lb-arrow.prev { left: 8px; }
-    .lb-arrow.next { right: 8px; }
-    .lb-arrow { background: rgba(0,0,0,0.4); }
-  }
+  .lb-arrow.prev { left: 12px; }
+  .lb-arrow.next { right: 12px; }
   .lb-counter {
     text-align: center; padding: 6px 0 0;
     font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 1px;
@@ -537,14 +533,7 @@
   <div class="divider" style="margin:0 auto 16px;"></div>
   <div class="section-title" style="text-align:center;">作品集锦 &middot; Showreel</div>
   <div class="showreel-player fade-up">
-    <video id="showreelVideo" preload="none" playsinline poster="images/cover-reel.png">
-      <source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/showreel.mp4" type="video/mp4">
-    </video>
-    <div class="reel-overlay" id="reelOverlay" onclick="playShowreel()" style="background:url('images/cover-reel.png') center/cover no-repeat;">
-      <div class="reel-toolbar">
-        <button class="lb-btn" onclick="event.stopPropagation();toggleReelFullscreen()" title="全屏">
-          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,0.7)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
-      </div>
+    <div class="reel-overlay" id="reelOverlay" onclick="openShowreel()" style="background:url('images/cover-reel.png') center/cover no-repeat; cursor:pointer; position:relative; aspect-ratio:16/9;">
       <div class="showreel-play"></div>
     </div>
   </div>
@@ -600,15 +589,17 @@ const fadeObs = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
 
-// Showreel play
-function playShowreel() {
-  const v = document.getElementById('showreelVideo');
-  v.load();
-  v.play();
-  document.getElementById('reelOverlay').classList.add('hidden');
-  v.addEventListener('ended', () => {
-    document.getElementById('reelOverlay').classList.remove('hidden');
-  }, { once: true });
+// Showreel - open in lightbox
+function openShowreel() {
+  var inner = document.getElementById('lightboxInner');
+  var reelSrc = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/showreel.mp4';
+  inner.innerHTML = lbToolbar()
+    + '<video id="lbVideo" controls autoplay playsinline preload="auto">'
+    + '<source src="' + reelSrc + '" type="video/mp4">'
+    + '</video>'
+    + '<div class="lightbox-title">作品集锦 &middot; Showreel</div>';
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 // Lightbox toolbar buttons
