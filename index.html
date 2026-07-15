@@ -219,10 +219,25 @@
   }
   .lightbox.active { opacity: 1; pointer-events: all; }
   .lightbox-inner {
-    position: relative; width: 92%; max-width: 1000px;
-    transform: scale(0.95); transition: transform 0.35s ease;
+    position: relative; width: 95%; max-width: 1200px;
+    transform: scale(0.95); transition: transform 0.35s ease, max-width 0.3s ease, width 0.3s ease;
   }
   .lightbox.active .lightbox-inner { transform: scale(1); }
+  .lightbox-inner.maximized { max-width: 98%; width: 98%; }
+  .lightbox-inner.maximized video { max-height: 90vh; }
+  .lightbox-toolbar {
+    display: flex; justify-content: flex-end; align-items: center; gap: 4px;
+    padding: 0 0 8px 0;
+  }
+  .lb-btn {
+    width: 36px; height: 36px; cursor: pointer;
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 6px; transition: background 0.2s;
+    background: rgba(255,255,255,0.08); border: none; outline: none;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.18); }
+  .lb-btn svg { width: 18px; height: 18px; stroke: rgba(255,255,255,0.7); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .lb-btn:hover svg { stroke: #fff; }
   .lightbox-inner video {
     width: 100%; border-radius: 8px; background: #000;
     max-height: 80vh; display: block;
@@ -235,18 +250,6 @@
     text-align: center; padding: 14px 0 0;
     font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px;
   }
-  .lightbox-close {
-    position: absolute; top: -44px; right: 0;
-    width: 32px; height: 32px; cursor: pointer;
-    display: flex; justify-content: center; align-items: center;
-  }
-  .lightbox-close::before, .lightbox-close::after {
-    content: ""; position: absolute;
-    width: 20px; height: 1.5px; background: rgba(255,255,255,0.6);
-  }
-  .lightbox-close::before { transform: rotate(45deg); }
-  .lightbox-close::after { transform: rotate(-45deg); }
-  .lightbox-close:hover::before, .lightbox-close:hover::after { background: #fff; }
 
   /* FOOTER */
   .footer { border-top: 1px solid rgba(0,0,0,0.06); padding: 64px 60px 40px; }
@@ -544,9 +547,7 @@
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <div class="lightbox-inner" id="lightboxInner">
-    <div class="lightbox-close" onclick="closeLightbox(event)"></div>
-  </div>
+  <div class="lightbox-inner" id="lightboxInner"></div>
 </div>
 
 <script>
@@ -578,6 +579,35 @@ function playShowreel() {
   }, { once: true });
 }
 
+// Lightbox toolbar buttons
+function lbToolbar() {
+  return '<div class="lightbox-toolbar">'
+    // Maximize button
+    + '<button class="lb-btn" onclick="toggleMaximize(event)" title="最大化">'
+    + '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></button>'
+    // Fullscreen button
+    + '<button class="lb-btn" onclick="toggleFullscreen(event)" title="全屏">'
+    + '<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>'
+    // Close button
+    + '<button class="lb-btn" onclick="closeLightbox(event)" title="关闭">'
+    + '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>'
+    + '</div>';
+}
+function toggleMaximize(e) {
+  e.stopPropagation();
+  document.getElementById('lightboxInner').classList.toggle('maximized');
+}
+function toggleFullscreen(e) {
+  e.stopPropagation();
+  var vid = document.getElementById('lbVideo');
+  if (!vid) vid = document.querySelector('.lightbox-inner video');
+  if (vid) {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (vid.requestFullscreen) vid.requestFullscreen();
+    else if (vid.webkitRequestFullscreen) vid.webkitRequestFullscreen();
+  }
+}
+
 // Open card (video or still)
 function openCard(el) {
   const type = el.getAttribute('data-type');
@@ -588,7 +618,7 @@ function openCard(el) {
     const videoFile = el.getAttribute('data-video');
     const src = vidUrl(videoFile);
     const inRepo = IN_REPO[videoFile];
-    inner.innerHTML = '<div class="lightbox-close" onclick="closeLightbox(event)"></div>'
+    inner.innerHTML = lbToolbar()
       + '<video id="lbVideo" controls autoplay playsinline preload="auto">'
       + '<source src="' + src + '" type="video/mp4">'
       + '</video>'
@@ -611,7 +641,7 @@ function openCard(el) {
   } else {
     const imgFile = el.getAttribute('data-img');
     const src = imgFile.startsWith('images/') ? imgFile : M + imgFile;
-    inner.innerHTML = '<div class="lightbox-close" onclick="closeLightbox(event)"></div>'
+    inner.innerHTML = lbToolbar()
       + '<img class="still-full" src="' + src + '" alt="' + title + '">'
       + '<div class="lightbox-title">' + title + '</div>';
   }
@@ -633,8 +663,9 @@ function stopAllMedia() {
 }
 
 function closeLightbox(e) {
-  if (e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
+  if (e.target === document.getElementById('lightbox') || e.target.closest('.lb-btn:last-child')) {
     stopAllMedia();
+    document.getElementById('lightboxInner').classList.remove('maximized');
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -642,6 +673,7 @@ function closeLightbox(e) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     stopAllMedia();
+    document.getElementById('lightboxInner').classList.remove('maximized');
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
