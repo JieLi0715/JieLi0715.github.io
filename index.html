@@ -87,8 +87,8 @@
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
   .card-thumb { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #1a1a1a; }
-  .card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; opacity: 0.85; }
-  .card:hover .card-thumb img { transform: scale(1.04); opacity: 1; }
+  .card-thumb img, .card-thumb video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; opacity: 0.85; }
+  .card:hover .card-thumb img, .card:hover .card-thumb video { transform: scale(1.04); opacity: 1; }
   .card-thumb .play-overlay {
     position: absolute; inset: 0;
     display: flex; justify-content: center; align-items: center;
@@ -321,7 +321,7 @@
     <div class="comp-main">
       <div class="card" data-title="张家界旅游景区展馆全息项目" data-video="comp-zhangjiajie.mp4" data-type="video" onclick="openCard(this)">
         <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="张家界">
+          <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-zhangjiajie.mp4" type="video/mp4"></video>
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -337,7 +337,7 @@
     <div class="comp-side">
       <div class="card" data-title="湖南韶山&ldquo;红色骄阳&rdquo;" data-video="comp-shaoshan.mp4" data-type="video" onclick="openCard(this)">
         <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg" alt="湖南韶山">
+          <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-shaoshan.mp4" type="video/mp4"></video>
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -349,7 +349,7 @@
       </div>
       <div class="card" data-title="陕西城固宣传片" data-video="comp-chenggu.mp4" data-type="video" onclick="openCard(this)">
         <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="城固">
+          <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-chenggu.mp4" type="video/mp4"></video>
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -359,7 +359,7 @@
       </div>
       <div class="card" data-title="AE 粒子大屏背景互动墙" data-video="comp-particle.mp4" data-type="video" onclick="openCard(this)">
         <div class="card-thumb">
-          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="大屏互动">
+          <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-particle.mp4" type="video/mp4"></video>
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -379,7 +379,7 @@
   <div class="anim-grid fade-up">
     <div class="card" data-title="工业动画抓包机演示" data-video="3d-gripper.m4v" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg" alt="抓包机">
+        <video preload="metadata" muted><source src="/videos/3d-gripper.m4v" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -389,7 +389,7 @@
     </div>
     <div class="card" data-title="中国移动 5G" data-video="3d-5g.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="5G">
+        <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-5g.mp4" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -399,7 +399,7 @@
     </div>
     <div class="card" data-title="航天 · 天问一号" data-video="3d-tianwen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="天问一号">
+        <video preload="metadata" muted><source src="/videos/3d-tianwen.mp4" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -409,7 +409,7 @@
     </div>
     <div class="card" data-title="中智建工厂" data-video="3d-factory.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="工厂">
+        <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-factory.mp4" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -419,7 +419,7 @@
     </div>
     <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mov" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="C4D动效">
+        <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-c4d.mov" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -429,7 +429,7 @@
     </div>
     <div class="card" data-title="中国移动大屏" data-video="3d-screen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="大屏">
+        <video preload="metadata" muted><source src="/videos/3d-screen.mp4" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -550,6 +550,8 @@ function playShowreel() {
   v.load();
   v.play();
   document.getElementById('reelOverlay').classList.add('hidden');
+  if (v.requestFullscreen) v.requestFullscreen();
+  else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
   v.addEventListener('ended', () => {
     document.getElementById('reelOverlay').classList.remove('hidden');
   }, { once: true });
@@ -586,6 +588,13 @@ function openCard(el) {
         document.getElementById('lbFallback').style.display = 'block';
       });
     }
+    // Request fullscreen for video playback
+    setTimeout(function() {
+      var vid = document.getElementById('lbVideo');
+      if (vid && vid.requestFullscreen) vid.requestFullscreen();
+      else if (vid && vid.webkitRequestFullscreen) vid.webkitRequestFullscreen();
+      else if (vid && vid.msRequestFullscreen) vid.msRequestFullscreen();
+    }, 300);
   } else {
     const imgFile = el.getAttribute('data-img');
     const src = M + imgFile;
@@ -602,6 +611,8 @@ function closeLightbox(e) {
   if (e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
     var vid = document.getElementById('lbVideo');
     if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -610,6 +621,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     var vid = document.getElementById('lbVideo');
     if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
