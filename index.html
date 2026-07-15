@@ -108,6 +108,13 @@
   .card:hover .card-thumb img, .card:hover .card-thumb video {
     transform: scale(1.04); filter: blur(0px) saturate(1);
   }
+  .card-thumb .card-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 50%, #2a2a2a 100%);
+  }
+  video::-webkit-media-controls-enclosure { border-radius: 0; }
+  video::-webkit-media-controls-panel { width: calc(100% + 30px); }
+  .card, .play-btn, .play-overlay, .showreel-play, .lb-btn, .lb-arrow { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
   .card-thumb .play-overlay {
     position: absolute; inset: 0;
     display: flex; justify-content: center; align-items: center;
@@ -335,6 +342,16 @@
     .showreel-section { padding: 64px 20px; }
     .footer { padding: 48px 24px 32px; }
     .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+    .lb-btn { width: 40px; height: 40px; }
+    .lb-btn svg { width: 20px; height: 20px; }
+    .lb-arrow { width: 40px; height: 40px; }
+    .lb-arrow svg { width: 20px; height: 20px; }
+    .lb-arrow.prev { left: 8px; }
+    .lb-arrow.next { right: 8px; }
+    .lightbox-inner video { max-height: 60vh; }
+    .card-thumb .play-overlay { background: rgba(0,0,0,0.2); }
+    .play-btn { width: 44px; height: 44px; }
+    .play-btn::after { border-left-width: 12px; border-top-width: 7px; border-bottom-width: 7px; }
   }
   @media (max-width: 480px) {
     .hero h1 { font-size: 32px; letter-spacing: 8px; }
@@ -436,7 +453,7 @@
   <div class="anim-grid fade-up">
     <div class="card" data-title="工业动画抓包机演示" data-video="3d-gripper.m4v" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted><source src="/videos/3d-gripper.m4v" type="video/mp4"></video>
+        <div class="card-placeholder"></div>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -446,7 +463,7 @@
     </div>
     <div class="card" data-title="中国移动 5G" data-video="3d-5g.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-5g.mp4" type="video/mp4"></video>
+        <div class="card-placeholder"></div>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -456,7 +473,7 @@
     </div>
     <div class="card" data-title="航天 · 天问一号" data-video="3d-tianwen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted><source src="/videos/3d-tianwen.mp4" type="video/mp4"></video>
+        <div class="card-placeholder"></div>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -466,7 +483,7 @@
     </div>
     <div class="card" data-title="中智建工厂" data-video="3d-factory.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-factory.mp4" type="video/mp4"></video>
+        <div class="card-placeholder"></div>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -476,7 +493,7 @@
     </div>
     <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mov" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-c4d.mov" type="video/mp4"></video>
+        <div class="card-placeholder"></div>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -486,7 +503,7 @@
     </div>
     <div class="card" data-title="中国移动大屏" data-video="3d-screen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted><source src="/videos/3d-screen.mp4" type="video/mp4"></video>
+        <div class="card-placeholder"></div>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -594,7 +611,7 @@ function openShowreel() {
   var inner = document.getElementById('lightboxInner');
   var reelSrc = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/showreel.mp4';
   inner.innerHTML = lbToolbar()
-    + '<video id="lbVideo" controls autoplay playsinline preload="auto">'
+    + '<video id="lbVideo" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
     + '<source src="' + reelSrc + '" type="video/mp4">'
     + '</video>'
     + '<div class="lightbox-title">作品集锦 &middot; Showreel</div>';
@@ -664,14 +681,6 @@ function galleryNext(e) {
   else showGalleryItem(0);
 }
 
-// Showreel fullscreen
-function toggleReelFullscreen() {
-  var player = document.querySelector('.showreel-player');
-  if (document.fullscreenElement) document.exitFullscreen();
-  else if (player.requestFullscreen) player.requestFullscreen();
-  else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
-}
-
 // Open card (video or still)
 function openCard(el) {
   const type = el.getAttribute('data-type');
@@ -681,27 +690,11 @@ function openCard(el) {
   if (type === 'video') {
     const videoFile = el.getAttribute('data-video');
     const src = vidUrl(videoFile);
-    const inRepo = IN_REPO[videoFile];
     inner.innerHTML = lbToolbar()
-      + '<video id="lbVideo" controls autoplay playsinline preload="auto">'
+      + '<video id="lbVideo" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
       + '<source src="' + src + '" type="video/mp4">'
       + '</video>'
-      + '<div id="lbFallback" style="display:none;text-align:center;padding:40px 20px;">'
-      + '<p style="color:rgba(255,255,255,0.5);margin-bottom:16px;font-size:13px;">该视频较大，需要在新标签页打开播放</p>'
-      + '<a href="' + M + videoFile + '" target="_blank" style="display:inline-block;padding:10px 24px;border:1px solid rgba(255,255,255,0.3);border-radius:4px;color:#fff;font-size:13px;text-decoration:none;">点击播放视频</a>'
-      + '</div>'
       + '<div class="lightbox-title">' + title + '</div>';
-    if (!inRepo) {
-      var vid = document.getElementById('lbVideo');
-      vid.addEventListener('error', function() {
-        vid.style.display = 'none';
-        document.getElementById('lbFallback').style.display = 'block';
-      });
-      vid.querySelector('source').addEventListener('error', function() {
-        vid.style.display = 'none';
-        document.getElementById('lbFallback').style.display = 'block';
-      });
-    }
   } else if (type === 'still') {
     initGallery();
     var idx = galleryCards.indexOf(el);
@@ -717,9 +710,6 @@ function stopAllMedia() {
   // Stop lightbox video
   var vid = document.getElementById('lbVideo');
   if (vid) { vid.pause(); vid.currentTime = 0; vid.src = ''; vid.load(); }
-  // Stop showreel video
-  var reel = document.getElementById('showreelVideo');
-  if (reel && !reel.paused) { reel.pause(); reel.currentTime = 0; }
   // Exit fullscreen if active
   if (document.fullscreenElement) document.exitFullscreen();
   else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
@@ -748,6 +738,12 @@ document.addEventListener('keydown', e => {
 // Stop all media when user switches tabs or minimizes window
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopAllMedia();
+});
+// Prevent right-click save on videos and lightbox images
+document.addEventListener('contextmenu', function(e) {
+  if (e.target.tagName === 'VIDEO' || (e.target.tagName === 'IMG' && e.target.closest('.lightbox-inner'))) {
+    e.preventDefault();
+  }
 });
 </script>
 
