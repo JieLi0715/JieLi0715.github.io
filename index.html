@@ -259,13 +259,16 @@
   .lightbox.active { opacity: 1; pointer-events: all; }
   .lightbox-inner {
     position: relative; width: 90%; max-width: 960px;
-    aspect-ratio: 16/9; background: #000; border-radius: 8px;
+    background: #000; border-radius: 8px;
     overflow: visible;
     transform: scale(0.95); transition: transform 0.35s ease;
   }
   .lightbox.active .lightbox-inner { transform: scale(1); }
-  .lightbox-inner video, .lightbox-inner iframe {
-    width: 100%; height: 100%; border: none;
+  .lightbox-inner img.still-full {
+    width: 100%; height: auto; display: block; border-radius: 8px;
+  }
+  .lightbox-inner video {
+    width: 100%; height: auto; display: block; border-radius: 8px;
   }
   .lightbox-close {
     position: absolute; top: -44px; right: 0;
@@ -279,13 +282,31 @@
   .lightbox-close::before { transform: rotate(45deg); }
   .lightbox-close::after { transform: rotate(-45deg); }
   .lightbox-close:hover::before, .lightbox-close:hover::after { background: #fff; }
-  .lightbox-placeholder {
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    gap: 12px; color: rgba(255,255,255,0.3);
-    font-size: 14px; letter-spacing: 1px;
+
+  /* Video link button in lightbox */
+  .video-link-bar {
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center;
   }
+  .video-link-bar .vtitle {
+    font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 500;
+  }
+  .video-link-bar .vbtn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 4px;
+    font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    transition: all 0.2s; cursor: pointer;
+    background: none;
+  }
+  .video-link-bar .vbtn:hover {
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+  }
+  .video-link-bar .vbtn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
 
   /* ===== FOOTER ===== */
   .footer {
@@ -433,9 +454,9 @@
   <div class="comp-layout fade-up">
     <!-- Main card -->
     <div class="comp-main">
-      <div class="card" data-title="张家界旅游景区展馆全息项目" onclick="openLightbox(this)">
+      <div class="card" data-title="张家界旅游景区展馆全息项目" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-zhangjiajie.mp4" onclick="openVideoCard(this)">
         <div class="card-thumb">
-          <img src="https://picsum.photos/seed/zjj/800/450" alt="张家界旅游景区展馆">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="张家界旅游景区展馆">
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -453,9 +474,9 @@
 
     <!-- Side cards -->
     <div class="comp-side">
-      <div class="card" data-title="陕西城固宣传片" onclick="openLightbox(this)">
+      <div class="card" data-title="陕西城固宣传片" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-chenggu.mp4" onclick="openVideoCard(this)">
         <div class="card-thumb">
-          <img src="https://picsum.photos/seed/cgxc/600/340" alt="陕西城固宣传片">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="陕西城固宣传片">
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -467,9 +488,9 @@
         </div>
       </div>
 
-      <div class="card" data-title="AE粒子大屏背景互动墙" onclick="openLightbox(this)">
+      <div class="card" data-title="AE粒子大屏背景互动墙" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-particle.mp4" onclick="openVideoCard(this)">
         <div class="card-thumb">
-          <img src="https://picsum.photos/seed/particle/600/340" alt="AE粒子大屏">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="AE粒子大屏">
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
@@ -480,16 +501,17 @@
         </div>
       </div>
 
-      <div class="card" data-title="太白山景区全息项目" onclick="openLightbox(this)">
+      <div class="card" data-title="湖南韶山&ldquo;红色骄阳&rdquo;" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-shaoshan.mp4" onclick="openVideoCard(this)">
         <div class="card-thumb">
-          <img src="https://picsum.photos/seed/tbs2/600/340" alt="太白山全息">
+          <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg" alt="湖南韶山红色骄阳">
           <div class="play-overlay"><div class="play-btn"></div></div>
         </div>
         <div class="card-info">
-          <div class="card-name">太白山景区全息项目（片段）</div>
+          <div class="card-name">湖南韶山&ldquo;红色骄阳&rdquo;</div>
           <div class="card-tags">
+            <span class="tag">文旅宣传</span>
+            <span class="tag">全息舞美</span>
             <span class="tag">AE 合成</span>
-            <span class="tag">粒子特效</span>
           </div>
         </div>
       </div>
@@ -504,9 +526,9 @@
   <div class="section-title">三维动画 &middot; Redshift 渲染 &middot; AE 合成</div>
 
   <div class="anim-grid fade-up">
-    <div class="card" data-title="工业动画抓包机演示" onclick="openLightbox(this)">
+    <div class="card" data-title="工业动画抓包机演示" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-gripper.m4v" onclick="openVideoCard(this)">
       <div class="card-thumb">
-        <img src="https://picsum.photos/seed/gripper/640/360" alt="抓包机">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg" alt="抓包机">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -517,9 +539,9 @@
       </div>
     </div>
 
-    <div class="card" data-title="中国移动 5G" onclick="openLightbox(this)">
+    <div class="card" data-title="中国移动 5G" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-5g.mp4" onclick="openVideoCard(this)">
       <div class="card-thumb">
-        <img src="https://picsum.photos/seed/cmcc5g/640/360" alt="中国移动5G">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="中国移动5G">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -530,9 +552,9 @@
       </div>
     </div>
 
-    <div class="card" data-title="航天 · 天问一号" onclick="openLightbox(this)">
+    <div class="card" data-title="航天 · 天问一号" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-tianwen.mp4" onclick="openVideoCard(this)">
       <div class="card-thumb">
-        <img src="https://picsum.photos/seed/tianwen/640/360" alt="天问一号">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="天问一号">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -543,9 +565,9 @@
       </div>
     </div>
 
-    <div class="card" data-title="中智建工厂" onclick="openLightbox(this)">
+    <div class="card" data-title="中智建工厂" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-factory.mp4" onclick="openVideoCard(this)">
       <div class="card-thumb">
-        <img src="https://picsum.photos/seed/factory/640/360" alt="中智建工厂">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="中智建工厂">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -556,9 +578,9 @@
       </div>
     </div>
 
-    <div class="card" data-title="C4D 动效动画" onclick="openLightbox(this)">
+    <div class="card" data-title="C4D 动效动画" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-c4d.mov" onclick="openVideoCard(this)">
       <div class="card-thumb">
-        <img src="https://picsum.photos/seed/c4dmotion/640/360" alt="C4D动效">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="C4D动效">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -569,9 +591,9 @@
       </div>
     </div>
 
-    <div class="card" data-title="中国移动大屏" onclick="openLightbox(this)">
+    <div class="card" data-title="中国移动大屏" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-screen.mp4" onclick="openVideoCard(this)">
       <div class="card-thumb">
-        <img src="https://picsum.photos/seed/cmccscreen/640/360" alt="中国移动大屏">
+        <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="中国移动大屏">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -591,32 +613,32 @@
   <div class="section-title">三维静帧 &middot; Redshift 渲染 &middot; 工业厂区效果图</div>
 
   <div class="stills-grid fade-up">
-    <div class="still-card" onclick="openLightbox(this)" data-title="工业厂区全景">
-      <img class="still-img" src="https://picsum.photos/seed/still1/800/300" alt="工业厂区全景">
+    <div class="still-card" onclick="openStill(this)" data-title="工业厂区全景" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="工业厂区全景">
       <div class="still-label">工业厂区全景</div>
     </div>
-    <div class="still-card" onclick="openLightbox(this)" data-title="设备车间渲染">
-      <img class="still-img" src="https://picsum.photos/seed/still2/400/300" alt="设备车间">
+    <div class="still-card" onclick="openStill(this)" data-title="设备车间渲染" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still2.png" alt="设备车间">
       <div class="still-label">设备车间渲染</div>
     </div>
-    <div class="still-card" onclick="openLightbox(this)" data-title="管道系统建模">
-      <img class="still-img" src="https://picsum.photos/seed/still3/400/300" alt="管道系统">
+    <div class="still-card" onclick="openStill(this)" data-title="管道系统建模" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still3.png" alt="管道系统">
       <div class="still-label">管道系统建模</div>
     </div>
-    <div class="still-card" onclick="openLightbox(this)" data-title="产品细节特写">
-      <img class="still-img" src="https://picsum.photos/seed/still4/400/300" alt="产品特写">
+    <div class="still-card" onclick="openStill(this)" data-title="产品细节特写" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still4.jpg" alt="产品特写">
       <div class="still-label">产品细节特写</div>
     </div>
-    <div class="still-card" onclick="openLightbox(this)" data-title="厂区鸟瞰图">
-      <img class="still-img" src="https://picsum.photos/seed/still5/400/300" alt="厂区鸟瞰">
+    <div class="still-card" onclick="openStill(this)" data-title="厂区鸟瞰图" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still5.png" alt="厂区鸟瞰">
       <div class="still-label">厂区鸟瞰图</div>
     </div>
-    <div class="still-card" onclick="openLightbox(this)" data-title="机械设备展示">
-      <img class="still-img" src="https://picsum.photos/seed/still6/400/300" alt="机械设备">
+    <div class="still-card" onclick="openStill(this)" data-title="机械设备展示" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still6.png" alt="机械设备">
       <div class="still-label">机械设备展示</div>
     </div>
-    <div class="still-card" onclick="openLightbox(this)" data-title="室内空间渲染">
-      <img class="still-img" src="https://picsum.photos/seed/still7/400/300" alt="室内空间">
+    <div class="still-card" onclick="openStill(this)" data-title="室内空间渲染" data-img="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg">
+      <img class="still-img" src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still7.jpg" alt="室内空间">
       <div class="still-label">室内空间渲染</div>
     </div>
   </div>
@@ -628,8 +650,8 @@
   <div class="divider" style="margin:0 auto 16px;"></div>
   <div class="section-title" style="text-align:center;">作品集锦 &middot; Showreel</div>
 
-  <div class="showreel-player fade-up" data-title="作品集锦 Showreel" onclick="openLightbox(this)">
-    <img src="https://picsum.photos/seed/showreel/1200/675" alt="Showreel">
+  <div class="showreel-player fade-up" data-title="作品集锦 Showreel" onclick="openVideoCard(this)" data-video="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/comp-zhangjiajie.mp4">
+    <img src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/still1.png" alt="Showreel">
     <div class="showreel-play"><div class="play-btn"></div></div>
   </div>
   <div class="showreel-note">所有片段来自本人独立完成项目</div>
@@ -644,6 +666,7 @@
       <div class="footer-contact">
         <a href="mailto:jieli0715@outlook.com">jieli0715@outlook.com</a>
         <a href="tel:+8617792375660">177-9237-5660</a>
+        <a href="https://jieli0715.github.io" target="_blank">作品集</a>
       </div>
     </div>
     <div class="footer-right">
@@ -664,15 +687,13 @@
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <div class="lightbox-inner" id="lightboxInner">
     <div class="lightbox-close" onclick="closeLightbox(event)"></div>
-    <div class="lightbox-placeholder" id="lightboxContent">
-      <div class="play-btn" style="width:64px;height:64px;border-width:2px;"></div>
-      <span id="lightboxTitle">项目标题</span>
-      <span style="font-size:11px;opacity:0.5;">视频占位 — 替换为实际视频文件或嵌入链接</span>
-    </div>
   </div>
 </div>
 
 <script>
+  // Media base URL
+  const MEDIA = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
+
   // Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
@@ -690,13 +711,27 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
 
-  // Lightbox
-  function openLightbox(el) {
+  // Open video card — opens video in new tab for playback
+  function openVideoCard(el) {
+    const videoUrl = el.getAttribute('data-video');
+    if (videoUrl) {
+      window.open(videoUrl, '_blank');
+    }
+  }
+
+  // Open still image in lightbox
+  function openStill(el) {
+    const imgUrl = el.getAttribute('data-img');
     const title = el.getAttribute('data-title') || '';
-    document.getElementById('lightboxTitle').textContent = title;
+    const inner = document.getElementById('lightboxInner');
+    inner.innerHTML = '<div class="lightbox-close" onclick="closeLightbox(event)"></div>'
+      + '<img class="still-full" src="' + imgUrl + '" alt="' + title + '">'
+      + '<div class="video-link-bar"><span class="vtitle">' + title + '</span></div>';
     document.getElementById('lightbox').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
+
+  // Close lightbox
   function closeLightbox(e) {
     if (e.target === document.getElementById('lightbox') ||
         e.target.classList.contains('lightbox-close')) {
