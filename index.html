@@ -528,6 +528,9 @@
 
 <script>
 const M = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
+const REPO = '/videos/';
+const IN_REPO = {'3d-tianwen.mp4':1, '3d-gripper.m4v':1, '3d-screen.mp4':1};
+function vidUrl(f) { return IN_REPO[f] ? REPO + f : M + f; }
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80));
@@ -560,12 +563,29 @@ function openCard(el) {
 
   if (type === 'video') {
     const videoFile = el.getAttribute('data-video');
-    const src = M + videoFile;
+    const src = vidUrl(videoFile);
+    const inRepo = IN_REPO[videoFile];
     inner.innerHTML = '<div class="lightbox-close" onclick="closeLightbox(event)"></div>'
-      + '<video controls autoplay playsinline preload="auto">'
+      + '<video id="lbVideo" controls autoplay playsinline preload="auto">'
       + '<source src="' + src + '" type="video/mp4">'
       + '</video>'
+      + '<div id="lbFallback" style="display:none;text-align:center;padding:40px 20px;">'
+      + '<p style="color:rgba(255,255,255,0.5);margin-bottom:16px;font-size:13px;">该视频较大，需要在新标签页打开播放</p>'
+      + '<a href="' + M + videoFile + '" target="_blank" style="display:inline-block;padding:10px 24px;border:1px solid rgba(255,255,255,0.3);border-radius:4px;color:#fff;font-size:13px;text-decoration:none;">点击播放视频</a>'
+      + '</div>'
       + '<div class="lightbox-title">' + title + '</div>';
+    // If from release URL, add error fallback
+    if (!inRepo) {
+      var vid = document.getElementById('lbVideo');
+      vid.addEventListener('error', function() {
+        vid.style.display = 'none';
+        document.getElementById('lbFallback').style.display = 'block';
+      });
+      vid.querySelector('source').addEventListener('error', function() {
+        vid.style.display = 'none';
+        document.getElementById('lbFallback').style.display = 'block';
+      });
+    }
   } else {
     const imgFile = el.getAttribute('data-img');
     const src = M + imgFile;
@@ -580,18 +600,16 @@ function openCard(el) {
 
 function closeLightbox(e) {
   if (e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
-    // Stop any playing video
-    const vid = document.querySelector('#lightboxInner video');
-    if (vid) { vid.pause(); vid.src = ''; }
+    var vid = document.getElementById('lbVideo');
+    if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
 }
-
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    const vid = document.querySelector('#lightboxInner video');
-    if (vid) { vid.pause(); vid.src = ''; }
+    var vid = document.getElementById('lbVideo');
+    if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
     document.getElementById('lightbox').classList.remove('active');
     document.body.style.overflow = '';
   }
