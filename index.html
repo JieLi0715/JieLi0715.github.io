@@ -408,7 +408,7 @@
     </div>
     <div class="card" data-title="中国移动 5G" data-video="3d-5g.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="none" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-2.jpg"><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-5g.mp4#t=0.1" type="video/mp4"></video>
+        <video preload="metadata" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-2.jpg"><source src="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/3d-5g.mp4#t=0.1" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -595,7 +595,7 @@
 <script>
 const M = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
 const REPO = 'https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/';
-const IN_REPO = {'3d-tianwen.mp4':1, '3d-gripper.m4v':1, '3d-screen.mp4':1};
+const IN_REPO = {'3d-tianwen.mp4':1, '3d-gripper.m4v':1, '3d-screen.mp4':1, '3d-5g.mp4':1};
 function vidUrl(f) { return IN_REPO[f] ? REPO + f : M + f; }
 
 const nav = document.getElementById('nav');
