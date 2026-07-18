@@ -398,7 +398,7 @@
   <div class="anim-grid fade-up">
     <div class="card" data-title="工业动画抓包机演示" data-video="3d-gripper.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-1.jpg"><source src="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/3d-gripper.mp4#t=0.1" type="video/mp4"></video>
+        <video preload="metadata" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-1.jpg"><source src="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/3d-gripper.mp4#t=0.1" type="video/mp4"><source src="videos/3d-gripper.mp4#t=0.1" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -408,7 +408,7 @@
     </div>
     <div class="card" data-title="中国移动 5G" data-video="3d-5g.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="metadata" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-2.jpg"><source src="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/3d-5g.mp4#t=0.1" type="video/mp4"></video>
+        <video preload="metadata" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-2.jpg"><source src="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/3d-5g.mp4#t=0.1" type="video/mp4"><source src="videos/3d-5g.mp4#t=0.1" type="video/mp4"></video>
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -710,9 +710,11 @@ function openCard(el) {
   if (type === 'video') {
     const videoFile = el.getAttribute('data-video');
     const src = vidUrl(videoFile);
+    var sources = '<source src="' + src + '" type="video/mp4">';
+    if (IN_REPO[videoFile]) sources += '<source src="videos/' + videoFile + '" type="video/mp4">';
     inner.innerHTML = lbToolbar()
       + '<video id="lbVideo" class="loading" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
-      + '<source src="' + src + '" type="video/mp4">'
+      + sources
       + '</video>'
       + '<div id="lbLoading" style="text-align:center;padding:60px 20px;">'
       + '<div style="width:32px;height:32px;border:2px solid rgba(255,255,255,0.15);border-top-color:rgba(255,255,255,0.6);border-radius:50%;animation:lbSpin 0.8s linear infinite;margin:0 auto;"></div>'
