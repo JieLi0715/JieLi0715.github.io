@@ -418,7 +418,7 @@
     </div>
     <div class="card" data-title="航天 · 天问一号" data-video="3d-tianwen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="none" muted poster="https://jieli0715.github.io/images/cover-3d-3.jpg"><source src="https://jieli0715.github.io/videos/3d-tianwen.mp4#t=0.1" type="video/mp4"></video>
+        <img src="https://jieli0715.github.io/images/cover-3d-3.jpg" alt="天问一号">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -428,7 +428,7 @@
     </div>
     <div class="card" data-title="中智建工厂" data-video="3d-factory.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="none" muted poster="https://jieli0715.github.io/images/cover-3d-4.jpg"><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-factory.mp4#t=0.1" type="video/mp4"></video>
+        <img src="https://jieli0715.github.io/images/cover-3d-4.jpg" alt="中智建工厂">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -436,7 +436,7 @@
         <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-    <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mov" data-type="video" onclick="openCard(this)">
+    <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
         <img src="https://jieli0715.github.io/images/cover-3d-5.jpg" alt="C4D动效">
         <div class="play-overlay"><div class="play-btn"></div></div>
@@ -448,7 +448,7 @@
     </div>
     <div class="card" data-title="中国移动大屏" data-video="3d-screen.mp4" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="none" muted poster="https://jieli0715.github.io/images/cover-3d-6.jpg"><source src="https://jieli0715.github.io/videos/3d-screen.mp4#t=0.1" type="video/mp4"></video>
+        <img src="https://jieli0715.github.io/images/cover-3d-6.jpg" alt="大屏">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -594,77 +594,49 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   CDN Configuration & File Registry
+   ★ 视频CDN地址 — 修改这一行即可切换视频源 ★
+   
+   当前: GitHub Pages（备用方案，国内速度一般）
+   推荐: 注册七牛云后替换为你的七牛云CDN地址
+   例如: var CDN = 'https://xxxxx.hn-kunpeng.bkt.clouddn.com/videos/';
    ═══════════════════════════════════════════════════════════ */
 var CDN = 'https://jieli0715.github.io/videos/';
-var REL = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
 
-/* Files hosted in repo /videos/ dir → jsDelivr CDN (fast, range requests)
-   Files >50MB on GitHub Releases only (slower, no range requests)
-   After compressing large videos to <50MB, upload to repo and add to ON_CDN */
-var ON_CDN = { '3d-tianwen.mp4':1, '3d-gripper.mp4':1, '3d-screen.mp4':1, '3d-5g.mp4':1 };
+/* 图片基础地址 */
+var IMG = 'https://jieli0715.github.io/images/';
 
-/* Approximate file sizes in MB (base quality) */
-var SIZE_MB = {
-  '3d-tianwen.mp4':17, '3d-gripper.mp4':25, '3d-screen.mp4':35, '3d-5g.mp4':20,
-  '3d-factory.mp4':236, '3d-c4d.mov':86,
-  'comp-zhangjiajie.mp4':108, 'comp-shaoshan.mp4':431, 'comp-chenggu.mp4':332,
-  'comp-particle.mp4':148, 'showreel.mp4':154
+/* 封面图映射 */
+var COVERS = {
+  '3d-gripper.mp4':     'cover-3d-1.jpg',
+  '3d-5g.mp4':          'cover-3d-2.jpg',
+  '3d-tianwen.mp4':     'cover-3d-3.jpg',
+  '3d-factory.mp4':     'cover-3d-4.jpg',
+  '3d-c4d.mp4':         'cover-3d-5.jpg',
+  '3d-screen.mp4':      'cover-3d-6.jpg',
+  'comp-zhangjiajie.mp4': 'cover-zjj.png',
+  'comp-shaoshan.mp4':  'cover-ss.png',
+  'comp-chenggu.mp4':   'cover-cg.png',
+  'comp-particle.mp4':  'cover-dp.png',
+  'showreel.mp4':       'cover-reel.png'
 };
 
 /* ═══════════════════════════════════════════════════════════
-   Multi-Quality Support
+   播放进度记忆 (localStorage)
    ═══════════════════════════════════════════════════════════ */
-var QUALITY_MAP = { 720: '_720', 1080: '_1080' };
-var currentQuality = 720; /* default until speed test completes */
+var MEM_PREFIX = 'lj_vid_';
 
-/**
- * Build a quality-specific URL for a video file.
- * e.g. getVideoUrl('3d-gripper.mp4', 720) → CDN + '3d-gripper_720.mp4'
- * If quality suffix is not in QUALITY_MAP, returns the base filename URL.
- */
-function getVideoUrl(name, quality) {
-  var dotIdx = name.lastIndexOf('.');
-  var base = name.substring(0, dotIdx);
-  var ext  = name.substring(dotIdx);
-  var suffix = QUALITY_MAP[quality] || '';
-  var fileName = base + suffix + ext;
-  return ON_CDN[name] ? CDN + fileName : REL + fileName;
+function getSavedProgress(file) {
+  try { return parseFloat(localStorage.getItem(MEM_PREFIX + file)) || 0; }
+  catch(e) { return 0; }
 }
 
-/** Base URL without quality suffix (the original file). */
-function getBaseUrl(name) {
-  return ON_CDN[name] ? CDN + name : REL + name;
+function saveProgress(file, time) {
+  try { localStorage.setItem(MEM_PREFIX + file, String(time)); } catch(e) {}
 }
 
-/** Alternate source URL (CDN ↔ GitHub Releases). */
-function getAlternateUrl(name) {
-  return ON_CDN[name] ? REL + name : CDN + name;
+function clearProgress(file) {
+  try { localStorage.removeItem(MEM_PREFIX + file); } catch(e) {}
 }
-
-/* ═══════════════════════════════════════════════════════════
-   Adaptive Quality Selection (network speed test)
-   ═══════════════════════════════════════════════════════════ */
-function testNetworkSpeed() {
-  var testUrl = 'https://jieli0715.github.io/images/cover-3d-1.jpg';
-  var start = performance.now();
-  return fetch(testUrl, { cache: 'no-store' })
-    .then(function(resp) {
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      return resp.blob();
-    })
-    .then(function(blob) {
-      var elapsed = (performance.now() - start) / 1000;
-      if (elapsed < 0.01) elapsed = 0.01;
-      var mbps = (blob.size * 8) / elapsed / 1e6;
-      currentQuality = mbps > 5 ? 1080 : 720;
-    })
-    .catch(function() {
-      currentQuality = 720;
-    });
-}
-/* Run speed test immediately on page load */
-testNetworkSpeed();
 
 /* ═══════════════════════════════════════════════════════════
    Nav scroll behavior & mobile menu
@@ -690,53 +662,46 @@ document.querySelectorAll('.fade-up').forEach(function(el) { fadeObs.observe(el)
 /* ═══════════════════════════════════════════════════════════
    Lightbox state management
    ═══════════════════════════════════════════════════════════ */
-var activeBlobUrl  = null;
 var currentVideoFile = null;
 var loadTimers = { slow: null, fail: null };
-var retrySourceFlip = false; /* toggles between primary & alternate on retry */
+var progressHandler = null;
 
-/* ── Blob URL cleanup ── */
-function cleanupCurrentBlob() {
-  if (activeBlobUrl) { URL.revokeObjectURL(activeBlobUrl); activeBlobUrl = null; }
+function cleanupVideo() {
   clearTimeout(loadTimers.slow);
   clearTimeout(loadTimers.fail);
-}
-
-/* ── Fetch video as blob (for files ≤80MB, provides better buffering) ── */
-function fetchVideoAsBlob(url) {
-  return fetch(url).then(function(resp) {
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return resp.blob();
-  }).then(function(blob) {
-    return URL.createObjectURL(blob);
-  });
+  var vid = document.getElementById('lbVideo');
+  if (vid) {
+    if (currentVideoFile && vid.currentTime > 0) {
+      saveProgress(currentVideoFile, vid.currentTime);
+    }
+    if (progressHandler) {
+      vid.removeEventListener('timeupdate', progressHandler);
+      progressHandler = null;
+    }
+    vid.pause();
+    vid.removeAttribute('src');
+    vid.load();
+  }
+  currentVideoFile = null;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Loading UI helpers (all text in Simplified Chinese)
+   Loading UI helpers
    ═══════════════════════════════════════════════════════════ */
-function showLoadingUI(fileSizeMB) {
+function showLoadingUI() {
   var ld = document.getElementById('lbLoading');
   if (ld) ld.style.display = '';
   var vid = document.getElementById('lbVideo');
   if (vid) vid.classList.add('loading');
   var fb = document.getElementById('lbFallback');
   if (fb) fb.style.display = 'none';
-  var msg = document.getElementById('lbLoadMsg');
-  if (msg) {
-    msg.innerHTML = '视频缓冲中，请稍候...'
-      + (fileSizeMB > 50 ? '<br><span style="font-size:11px;color:rgba(255,255,255,0.25);">文件约 ' + fileSizeMB + 'MB</span>' : '');
-  }
   var btn = document.getElementById('lbRetryBtn');
   if (btn) btn.style.display = 'none';
 }
 
-function showSlowWarning(fileSizeMB) {
+function showSlowWarning() {
   var msg = document.getElementById('lbLoadMsg');
-  if (msg) {
-    msg.innerHTML = '视频加载较慢，请耐心等待...'
-      + (fileSizeMB > 0 ? '<br><span style="font-size:11px;color:rgba(255,255,255,0.25);">文件约 ' + fileSizeMB + 'MB</span>' : '');
-  }
+  if (msg) msg.innerHTML = '视频加载较慢，请耐心等待...';
   var btn = document.getElementById('lbRetryBtn');
   if (btn) btn.style.display = 'block';
 }
@@ -762,32 +727,26 @@ function hideLoadingShowVideo() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Load timers (20s slow warning, 90s total timeout)
+   Load timers (15s slow warning, 60s total timeout)
    ═══════════════════════════════════════════════════════════ */
-function startLoadTimers(vid, videoFile) {
+function startLoadTimers(vid) {
   clearTimeout(loadTimers.slow);
   clearTimeout(loadTimers.fail);
-  var fileSizeMB = SIZE_MB[videoFile] || 0;
 
-  /* 20 seconds: show slow-connection warning + retry button */
   loadTimers.slow = setTimeout(function() {
-    if (vid.readyState < 3) showSlowWarning(fileSizeMB);
-  }, 20000);
+    if (vid.readyState < 3) showSlowWarning();
+  }, 15000);
 
-  /* 90 seconds: total timeout — give up */
   loadTimers.fail = setTimeout(function() {
     if (vid.readyState === 0) showLoadError();
-  }, 90000);
+  }, 60000);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Lightbox toolbar (with quality toggle button)
+   Lightbox toolbar
    ═══════════════════════════════════════════════════════════ */
 function lbToolbar() {
   return '<div class="lightbox-toolbar">'
-    + '<button class="lb-btn" id="lbQualityBtn" onclick="toggleQuality(event)" title="画质切换" '
-    + 'style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:0.5px;width:auto;padding:0 10px;">'
-    + currentQuality + 'p</button>'
     + '<button class="lb-btn" onclick="toggleMaximize(event)" title="最大化">'
     + '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></button>'
     + '<button class="lb-btn" onclick="toggleFullscreen(event)" title="全屏">'
@@ -797,138 +756,91 @@ function lbToolbar() {
     + '</div>';
 }
 
-/* ── Quality toggle: switch between 720p and 1080p ── */
-function toggleQuality(e) {
-  e.stopPropagation();
-  currentQuality = currentQuality === 1080 ? 720 : 1080;
-  var btn = document.getElementById('lbQualityBtn');
-  if (btn) btn.textContent = currentQuality + 'p';
-  if (currentVideoFile) reloadVideoWithQuality(currentVideoFile);
-}
-
-function reloadVideoWithQuality(videoFile) {
-  var vid = document.getElementById('lbVideo');
-  if (!vid) return;
-  cleanupCurrentBlob();
-  retrySourceFlip = false;
-  var fileSizeMB = SIZE_MB[videoFile] || 0;
-  var useBlob = fileSizeMB > 0 && fileSizeMB <= 500;
-  var url = getVideoUrl(videoFile, currentQuality);
-  attemptVideoLoad(vid, url, useBlob, videoFile, fileSizeMB, false);
-}
-
 /* ═══════════════════════════════════════════════════════════
-   Core video loading pipeline
+   Core video loading — 直接 <video src> 加载
    ═══════════════════════════════════════════════════════════ */
-
-/**
- * Attempt to load a video from a given URL.
- * Uses fetch+blob for files ≤80MB; direct <video src> for larger files.
- * On failure, automatically tries the alternate source once.
- */
-function attemptVideoLoad(vid, url, useBlob, videoFile, fileSizeMB, isRetry) {
-  vid.classList.add('loading');
-  vid.style.display = '';
-  showLoadingUI(fileSizeMB);
-
-  if (useBlob) {
-    fetchVideoAsBlob(url)
-      .then(function(blobUrl) {
-        cleanupCurrentBlob();
-        activeBlobUrl = blobUrl;
-        vid.src = blobUrl;
-        vid.load();
-        vid.play().catch(function(){});
-        startLoadTimers(vid, videoFile);
-      })
-      .catch(function() {
-        /* fetch failed — try direct URL as fallback within same source */
-        vid.src = url;
-        vid.load();
-        vid.play().catch(function(){});
-        startLoadTimers(vid, videoFile);
-      });
-  } else {
-    vid.src = url;
-    vid.load();
-    vid.play().catch(function(){});
-    startLoadTimers(vid, videoFile);
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   Main lightbox video loader
-   ═══════════════════════════════════════════════════════════ */
-function loadVideoInLightbox(videoFile, title, extraHTML) {
+function loadVideoInLightbox(videoFile, title) {
   currentVideoFile = videoFile;
-  retrySourceFlip = false;
-  cleanupCurrentBlob();
 
   var inner = document.getElementById('lightboxInner');
-  var fileSizeMB = SIZE_MB[videoFile] || 0;
-  var useBlob = fileSizeMB > 0 && fileSizeMB <= 500;
-  var primarySrc = getVideoUrl(videoFile, currentQuality);
-  var alternateSrc = getAlternateUrl(videoFile);
+  var coverImg = COVERS[videoFile] ? IMG + COVERS[videoFile] : '';
+  var videoUrl = CDN + videoFile;
+  var savedTime = getSavedProgress(videoFile);
 
   inner.innerHTML = lbToolbar()
-    + '<video id="lbVideo" class="loading" controls autoplay playsinline preload="metadata"'
-    + ' controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
-    + '</video>'
+    + '<video id="lbVideo" class="loading" controls autoplay playsinline'
+    + ' controlsList="nodownload" disablePictureInPicture oncontextmenu="return false"'
+    + (coverImg ? ' poster="' + coverImg + '"' : '')
+    + '></video>'
     /* Loading overlay */
     + '<div id="lbLoading" style="text-align:center;padding:60px 20px;">'
     + '<div style="width:32px;height:32px;border:2px solid rgba(255,255,255,0.15);border-top-color:rgba(255,255,255,0.6);border-radius:50%;animation:lbSpin 0.8s linear infinite;margin:0 auto;"></div>'
-    + '<p id="lbLoadMsg" style="color:rgba(255,255,255,0.4);margin:16px 0 0;font-size:13px;">视频缓冲中，请稍候...'
-    + (fileSizeMB > 50 ? '<br><span style="font-size:11px;color:rgba(255,255,255,0.25);">文件约 ' + fileSizeMB + 'MB</span>' : '')
-    + '</p>'
+    + '<p id="lbLoadMsg" style="color:rgba(255,255,255,0.4);margin:16px 0 0;font-size:13px;">视频缓冲中，请稍候...</p>'
     + '<button id="lbRetryBtn" style="display:none;margin:20px auto 0;padding:10px 28px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);border-radius:6px;cursor:pointer;font-size:13px;letter-spacing:1px;transition:background 0.2s;"'
     + ' onmouseover="this.style.background=\'rgba(255,255,255,0.22)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.12)\'"'
     + '>重新加载</button>'
     + '</div>'
-    /* Error fallback overlay */
+    /* Error fallback */
     + '<div id="lbFallback" style="display:none;text-align:center;padding:60px 20px;">'
     + '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-    + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">视频加载失败，请刷新页面重试</p>'
-    + '<button id="lbFallbackRetry" style="margin:20px auto 0;padding:10px 28px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);border-radius:6px;cursor:pointer;font-size:13px;letter-spacing:1px;transition:background 0.2s;"'
+    + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">视频加载失败</p>'
+    + '<button onclick="retryVideo()" style="margin:20px auto 0;padding:10px 28px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);border-radius:6px;cursor:pointer;font-size:13px;letter-spacing:1px;transition:background 0.2s;"'
     + ' onmouseover="this.style.background=\'rgba(255,255,255,0.22)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.12)\'"'
     + '>重新加载</button>'
     + '</div>'
-    + (extraHTML || '')
     + '<div class="lightbox-title">' + title + '</div>';
 
   var vid = document.getElementById('lbVideo');
   var retryBtn = document.getElementById('lbRetryBtn');
-  var fallbackRetry = document.getElementById('lbFallbackRetry');
-  var triedAlternate = false;
 
-  /* ── Video event listeners ── */
+  /* ── 视频事件监听 ── */
   vid.addEventListener('loadeddata', hideLoadingShowVideo);
-  vid.addEventListener('canplay', hideLoadingShowVideo);
-
-  vid.addEventListener('error', handleSourceError);
-
-  function handleSourceError() {
-    if (!triedAlternate) {
-      triedAlternate = true;
-      /* Auto-try the alternate CDN/Release source */
-      attemptVideoLoad(vid, alternateSrc, useBlob, videoFile, fileSizeMB, true);
-    } else {
-      showLoadError();
+  vid.addEventListener('canplay', function() {
+    hideLoadingShowVideo();
+    /* 恢复上次播放进度 */
+    if (savedTime > 2 && vid.duration > 0 && savedTime < vid.duration - 2) {
+      try {
+        vid.currentTime = savedTime;
+        var notice = document.getElementById('lbLoadMsg');
+        /* 短暂提示已恢复进度（不影响播放） */
+      } catch(e) {}
     }
-  }
+  });
 
-  /* ── Manual retry: alternates between primary and alternate sources ── */
-  function manualRetry() {
-    retrySourceFlip = !retrySourceFlip;
-    triedAlternate = false; /* reset so auto-fallback works again */
-    var url = retrySourceFlip ? alternateSrc : getVideoUrl(videoFile, currentQuality);
-    attemptVideoLoad(vid, url, useBlob, videoFile, fileSizeMB, false);
-  }
+  vid.addEventListener('error', function() {
+    showLoadError();
+  });
 
-  if (retryBtn) retryBtn.addEventListener('click', manualRetry);
-  if (fallbackRetry) fallbackRetry.addEventListener('click', manualRetry);
+  /* ── 进度记忆：每2秒保存一次 ── */
+  progressHandler = function() {
+    if (currentVideoFile && vid.currentTime > 0) {
+      saveProgress(currentVideoFile, vid.currentTime);
+    }
+  };
+  vid.addEventListener('timeupdate', progressHandler);
 
-  /* ── Start initial load ── */
-  attemptVideoLoad(vid, primarySrc, useBlob, videoFile, fileSizeMB, false);
+  /* ── 手动重试 ── */
+  if (retryBtn) retryBtn.addEventListener('click', retryVideo);
+
+  /* ── 开始加载 ── */
+  showLoadingUI();
+  vid.src = videoUrl;
+  vid.load();
+  vid.play().catch(function(){});
+  startLoadTimers(vid);
+}
+
+/* 重试当前视频 */
+function retryVideo() {
+  var vid = document.getElementById('lbVideo');
+  if (!vid || !currentVideoFile) return;
+  showLoadingUI();
+  vid.style.display = '';
+  vid.classList.add('loading');
+  vid.src = CDN + currentVideoFile;
+  vid.load();
+  vid.play().catch(function(){});
+  startLoadTimers(vid);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -957,7 +869,7 @@ function toggleFullscreen(e) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Gallery navigation for still images (arrows + keyboard)
+   Gallery navigation for still images
    ═══════════════════════════════════════════════════════════ */
 var galleryCards = [];
 var galleryIdx = -1;
@@ -1022,15 +934,7 @@ function openCard(el) {
    Stop all media & cleanup
    ═══════════════════════════════════════════════════════════ */
 function stopAllMedia() {
-  cleanupCurrentBlob();
-  currentVideoFile = null;
-
-  var vid = document.getElementById('lbVideo');
-  if (vid) {
-    vid.pause();
-    vid.removeAttribute('src');
-    vid.load();
-  }
+  cleanupVideo();
 
   var iframes = document.querySelectorAll('#lightboxInner iframe');
   iframes.forEach(function(f) { f.src = 'about:blank'; });
@@ -1051,7 +955,7 @@ function closeLightbox(e) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Keyboard handlers (ESC close, arrow gallery nav)
+   Keyboard handlers
    ═══════════════════════════════════════════════════════════ */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
@@ -1074,20 +978,17 @@ document.addEventListener('visibilitychange', function() {
 /* ═══════════════════════════════════════════════════════════
    Anti-download protections
    ═══════════════════════════════════════════════════════════ */
-/* Block right-click on video/lightbox images */
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'VIDEO' || (e.target.tagName === 'IMG' && e.target.closest('.lightbox-inner'))) {
     e.preventDefault();
   }
 });
-/* Block Ctrl+S and Ctrl+U */
 document.addEventListener('keydown', function(e) {
   if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) {
     e.preventDefault();
     return false;
   }
 });
-/* Block drag on videos and images */
 document.addEventListener('dragstart', function(e) {
   if (e.target.tagName === 'VIDEO' || e.target.tagName === 'IMG') {
     e.preventDefault();
