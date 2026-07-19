@@ -436,7 +436,7 @@
         <div class="card-tags"><span class="tag">C4D</span><span class="tag">Redshift</span><span class="tag">AE 合成</span></div>
       </div>
     </div>
-    <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mp4" data-type="video" onclick="openCard(this)">
+    <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mov" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
         <img src="https://jieli0715.github.io/images/cover-3d-5.jpg" alt="C4D动效">
         <div class="play-overlay"><div class="play-btn"></div></div>
@@ -602,8 +602,14 @@
    ═══════════════════════════════════════════════════════════ */
 var CDN = 'https://jieli0715.github.io/videos/';
 
+/* GitHub Releases 回退地址（仅在 Pages 中找不到文件时使用） */
+var REL = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
+
 /* 图片基础地址 */
 var IMG = 'https://jieli0715.github.io/images/';
+
+/* 这些视频文件直接存放在 GitHub Pages 的 /videos/ 目录中（小文件） */
+var ON_PAGES = { '3d-tianwen.mp4':1, '3d-gripper.mp4':1, '3d-screen.mp4':1, '3d-5g.mp4':1 };
 
 /* 封面图映射 */
 var COVERS = {
@@ -611,7 +617,7 @@ var COVERS = {
   '3d-5g.mp4':          'cover-3d-2.jpg',
   '3d-tianwen.mp4':     'cover-3d-3.jpg',
   '3d-factory.mp4':     'cover-3d-4.jpg',
-  '3d-c4d.mp4':         'cover-3d-5.jpg',
+  '3d-c4d.mov':         'cover-3d-5.jpg',
   '3d-screen.mp4':      'cover-3d-6.jpg',
   'comp-zhangjiajie.mp4': 'cover-zjj.png',
   'comp-shaoshan.mp4':  'cover-ss.png',
@@ -764,8 +770,11 @@ function loadVideoInLightbox(videoFile, title) {
 
   var inner = document.getElementById('lightboxInner');
   var coverImg = COVERS[videoFile] ? IMG + COVERS[videoFile] : '';
-  var videoUrl = CDN + videoFile;
   var savedTime = getSavedProgress(videoFile);
+
+  /* 智能选择视频源：小文件从 GitHub Pages 加载，大文件从 Releases 加载 */
+  var primaryUrl = ON_PAGES[videoFile] ? CDN + videoFile : REL + videoFile;
+  var fallbackUrl = ON_PAGES[videoFile] ? REL + videoFile : CDN + videoFile;
 
   inner.innerHTML = lbToolbar()
     + '<video id="lbVideo" class="loading" controls autoplay playsinline'
@@ -792,23 +801,30 @@ function loadVideoInLightbox(videoFile, title) {
 
   var vid = document.getElementById('lbVideo');
   var retryBtn = document.getElementById('lbRetryBtn');
+  var triedFallback = false;
 
   /* ── 视频事件监听 ── */
   vid.addEventListener('loadeddata', hideLoadingShowVideo);
-  vid.addEventListener('canplay', function() {
+  vid.addEventListener('canplay', function onCanPlay() {
+    vid.removeEventListener('canplay', onCanPlay);
     hideLoadingShowVideo();
     /* 恢复上次播放进度 */
     if (savedTime > 2 && vid.duration > 0 && savedTime < vid.duration - 2) {
-      try {
-        vid.currentTime = savedTime;
-        var notice = document.getElementById('lbLoadMsg');
-        /* 短暂提示已恢复进度（不影响播放） */
-      } catch(e) {}
+      try { vid.currentTime = savedTime; } catch(e) {}
     }
   });
 
   vid.addEventListener('error', function() {
-    showLoadError();
+    if (!triedFallback) {
+      /* 自动切换到备用源 */
+      triedFallback = true;
+      vid.src = fallbackUrl;
+      vid.load();
+      vid.play().catch(function(){});
+      startLoadTimers(vid);
+    } else {
+      showLoadError();
+    }
   });
 
   /* ── 进度记忆：每2秒保存一次 ── */
@@ -820,24 +836,29 @@ function loadVideoInLightbox(videoFile, title) {
   vid.addEventListener('timeupdate', progressHandler);
 
   /* ── 手动重试 ── */
+  window._retryFlip = false;
   if (retryBtn) retryBtn.addEventListener('click', retryVideo);
 
   /* ── 开始加载 ── */
   showLoadingUI();
-  vid.src = videoUrl;
+  vid.src = primaryUrl;
   vid.load();
   vid.play().catch(function(){});
   startLoadTimers(vid);
 }
 
-/* 重试当前视频 */
+/* 重试当前视频（在两个源之间切换） */
 function retryVideo() {
   var vid = document.getElementById('lbVideo');
   if (!vid || !currentVideoFile) return;
+  window._retryFlip = !window._retryFlip;
+  var url = window._retryFlip
+    ? (ON_PAGES[currentVideoFile] ? REL + currentVideoFile : CDN + currentVideoFile)
+    : (ON_PAGES[currentVideoFile] ? CDN + currentVideoFile : REL + currentVideoFile);
   showLoadingUI();
   vid.style.display = '';
   vid.classList.add('loading');
-  vid.src = CDN + currentVideoFile;
+  vid.src = url;
   vid.load();
   vid.play().catch(function(){});
   startLoadTimers(vid);
