@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>李杰 — 影视后期合成师 / 三维动效师 | 作品集</title>
 <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://github.com" crossorigin>
 <link href="https://fonts.loli.net/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -438,7 +439,7 @@
     </div>
     <div class="card" data-title="C4D 动效动画" data-video="3d-c4d.mov" data-type="video" onclick="openCard(this)">
       <div class="card-thumb">
-        <video preload="none" muted poster="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-5.jpg"><source src="https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/3d-c4d.mov#t=0.1" type="video/quicktime"></video>
+        <img src="https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/images/cover-3d-5.jpg" alt="C4D动效">
         <div class="play-overlay"><div class="play-btn"></div></div>
       </div>
       <div class="card-info">
@@ -593,10 +594,27 @@
 </div>
 
 <script>
-const M = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
-const REPO = 'https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/';
-const IN_REPO = {'3d-tianwen.mp4':1, '3d-gripper.mp4':1, '3d-screen.mp4':1, '3d-5g.mp4':1};
-function vidUrl(f) { return IN_REPO[f] ? REPO + f : M + f; }
+/* ── CDN routing ── */
+const CDN = 'https://cdn.jsdelivr.net/gh/JieLi0715/JieLi0715.github.io@main/videos/';
+const REL = 'https://github.com/JieLi0715/JieLi0715.github.io/releases/download/portfolio-media/';
+/*
+ * Hosting strategy:
+ * - Files <50MB in repo /videos/ dir → jsDelivr CDN (fast, supports range requests)
+ * - Files >50MB on GitHub Releases only (slower, no range requests)
+ * - After compressing large videos to <50MB, upload to repo and add to ON_CDN
+ */
+const ON_CDN = {
+  '3d-tianwen.mp4':1, '3d-gripper.mp4':1, '3d-screen.mp4':1, '3d-5g.mp4':1
+};
+/* Approximate file sizes in MB */
+const SIZE_MB = {
+  '3d-tianwen.mp4':17, '3d-gripper.mp4':25, '3d-screen.mp4':35, '3d-5g.mp4':20,
+  '3d-factory.mp4':236, '3d-c4d.mov':86,
+  'comp-zhangjiajie.mp4':108, 'comp-shaoshan.mp4':431, 'comp-chenggu.mp4':332,
+  'comp-particle.mp4':148, 'showreel.mp4':154
+};
+function vidUrl(f) { return ON_CDN[f] ? CDN + f : REL + f; }
+function fallbackUrl(f) { return ON_CDN[f] ? REL + f : CDN + f; }
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 80));
@@ -610,36 +628,178 @@ const fadeObs = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
 
-// Showreel - open in lightbox
-function openShowreel() {
+/* ── Shared video load helper ── */
+function loadVideoInLightbox(videoFile, title, extraHTML) {
   var inner = document.getElementById('lightboxInner');
-  var reelSrc = M + 'showreel.mp4';
+  var primarySrc = vidUrl(videoFile);
+  var fallbackSrc = fallbackUrl(videoFile);
+  var fileSizeMB = SIZE_MB[videoFile] || 0;
+  var useFetchBlob = fileSizeMB > 0 && fileSizeMB <= 100; /* fetch+blob for files ≤100MB */
+  var mimeType = videoFile.match(/\.mov$/i) ? 'video/quicktime' : 'video/mp4';
+
   inner.innerHTML = lbToolbar()
-    + '<video id="lbVideo" class="loading" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
-    + '<source src="' + reelSrc + '" type="video/mp4">'
+    + '<video id="lbVideo" class="loading" controls autoplay playsinline preload="metadata"'
+    + ' controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
+    + '<source src="' + primarySrc + '" type="' + mimeType + '">'
     + '</video>'
     + '<div id="lbLoading" style="text-align:center;padding:60px 20px;">'
     + '<div style="width:32px;height:32px;border:2px solid rgba(255,255,255,0.15);border-top-color:rgba(255,255,255,0.6);border-radius:50%;animation:lbSpin 0.8s linear infinite;margin:0 auto;"></div>'
-    + '<p style="color:rgba(255,255,255,0.4);margin:16px 0 0;font-size:13px;">视频加载中…</p></div>'
+    + '<p id="lbLoadMsg" style="color:rgba(255,255,255,0.4);margin:16px 0 0;font-size:13px;">视频加载中…'
+    + (fileSizeMB > 50 ? '<br><span style="font-size:11px;color:rgba(255,255,255,0.25);">文件约 ' + fileSizeMB + 'MB，请稍候</span>' : '')
+    + '</p>'
+    + '<button id="lbRetryBtn" style="display:none;margin:20px auto 0;padding:10px 28px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);border-radius:6px;cursor:pointer;font-size:13px;letter-spacing:1px;transition:background 0.2s;"'
+    + ' onmouseover="this.style.background=\'rgba(255,255,255,0.22)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.12)\'"'
+    + '>重新加载</button>'
+    + '</div>'
     + '<div id="lbFallback" style="display:none;text-align:center;padding:60px 20px;">'
     + '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-    + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">视频加载失败，请检查网络连接<br><span style="font-size:12px;color:rgba(255,255,255,0.3);">如使用境外网络，可能需要稍后重试</span></p>'
+    + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">视频加载失败，请检查网络连接</p>'
+    + '<button id="lbFallbackRetry" style="margin:20px auto 0;padding:10px 28px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.7);border-radius:6px;cursor:pointer;font-size:13px;letter-spacing:1px;transition:background 0.2s;"'
+    + ' onmouseover="this.style.background=\'rgba(255,255,255,0.22)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.12)\'"'
+    + '>重新加载</button>'
     + '</div>'
-    + '<div class="lightbox-title">作品集锦 &middot; Showreel</div>';
+    + (extraHTML || '')
+    + '<div class="lightbox-title">' + title + '</div>';
+
   var vid = document.getElementById('lbVideo');
   var srcEl = vid.querySelector('source');
-  function hideLoading() { var ld = document.getElementById('lbLoading'); if(ld) ld.style.display='none'; var v = document.getElementById('lbVideo'); if(v) v.classList.remove('loading'); }
-  function showFallback() { hideLoading(); vid.style.display = 'none'; document.getElementById('lbFallback').style.display = 'block'; }
-  srcEl.addEventListener('error', showFallback);
-  vid.addEventListener('error', showFallback);
+  var loadMsg = document.getElementById('lbLoadMsg');
+  var retryBtn = document.getElementById('lbRetryBtn');
+  var fallbackRetry = document.getElementById('lbFallbackRetry');
+  var tried = false;
+  var blobUrl = null;
+  var slowTimer, failTimer;
+
+  function hideLoading() {
+    var ld = document.getElementById('lbLoading');
+    if (ld) ld.style.display = 'none';
+    var v = document.getElementById('lbVideo');
+    if (v) { v.classList.remove('loading'); v.style.display = ''; }
+    clearTimeout(slowTimer); clearTimeout(failTimer);
+  }
+
+  function showRetryInLoading() {
+    if (loadMsg) loadMsg.innerHTML = '视频加载较慢，请耐心等待…<br><span style="font-size:11px;color:rgba(255,255,255,0.25);">文件约 ' + fileSizeMB + 'MB</span>';
+    if (retryBtn) retryBtn.style.display = 'block';
+  }
+
+  function showFallback() {
+    hideLoading();
+    vid.style.display = 'none';
+    document.getElementById('lbFallback').style.display = 'block';
+    clearTimeout(slowTimer); clearTimeout(failTimer);
+  }
+
+  function retryLoad() {
+    /* Reset UI */
+    vid.style.display = '';
+    vid.classList.add('loading');
+    document.getElementById('lbFallback').style.display = 'none';
+    document.getElementById('lbLoading').style.display = '';
+    if (loadMsg) loadMsg.innerHTML = '视频加载中…' + (fileSizeMB > 50 ? '<br><span style="font-size:11px;color:rgba(255,255,255,0.25);">文件约 ' + fileSizeMB + 'MB，请稍候</span>' : '');
+    if (retryBtn) retryBtn.style.display = 'none';
+    tried = false;
+
+    /* Alternate source */
+    var newSrc = (srcEl.src.indexOf(CDN) !== -1) ? fallbackSrc : primarySrc;
+
+    if (useFetchBlob) {
+      fetchVideoAsBlob(newSrc).then(function(url) {
+        cleanupBlob();
+        blobUrl = url;
+        vid.src = blobUrl;
+        vid.load();
+        vid.play().catch(function(){});
+        startTimers();
+      }).catch(function() {
+        /* fetch failed, try direct URL */
+        vid.src = newSrc;
+        vid.load();
+        vid.play().catch(function(){});
+        startTimers();
+      });
+    } else {
+      srcEl.src = newSrc;
+      vid.load();
+      vid.play().catch(function(){});
+      startTimers();
+    }
+  }
+
+  function cleanupBlob() {
+    if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
+  }
+
+  function fetchVideoAsBlob(url) {
+    return fetch(url).then(function(resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return resp.blob();
+    }).then(function(blob) {
+      return URL.createObjectURL(blob);
+    });
+  }
+
+  function startTimers() {
+    clearTimeout(slowTimer); clearTimeout(failTimer);
+    /* 25s: show retry option (slow but not failed) */
+    slowTimer = setTimeout(function() {
+      if (vid.readyState < 3) showRetryInLoading();
+    }, 25000);
+    /* 90s: give up entirely */
+    failTimer = setTimeout(function() {
+      if (vid.readyState === 0) {
+        if (!tried) { tried = true; retryLoad(); }
+        else showFallback();
+      }
+    }, 90000);
+  }
+
+  /* Event listeners */
   vid.addEventListener('loadeddata', hideLoading);
-  var loadTimer = setTimeout(function() { if (vid.readyState === 0 && vid.networkState !== 1) showFallback(); }, 20000);
-  vid.addEventListener('loadeddata', function() { clearTimeout(loadTimer); });
+  vid.addEventListener('canplay', hideLoading);
+  srcEl.addEventListener('error', function() {
+    if (!tried) { tried = true; retryLoad(); }
+    else showFallback();
+  });
+  vid.addEventListener('error', function() {
+    if (!tried) { tried = true; retryLoad(); }
+    else showFallback();
+  });
+  if (retryBtn) retryBtn.addEventListener('click', retryLoad);
+  if (fallbackRetry) fallbackRetry.addEventListener('click', retryLoad);
+
+  /* Start loading */
+  if (useFetchBlob) {
+    fetchVideoAsBlob(primarySrc).then(function(url) {
+      blobUrl = url;
+      vid.src = blobUrl;
+      vid.load();
+      vid.play().catch(function(){});
+      startTimers();
+    }).catch(function() {
+      /* fetch failed, fall back to direct source tag */
+      vid.load();
+      vid.play().catch(function(){});
+      startTimers();
+    });
+  } else {
+    vid.load();
+    vid.play().catch(function(){});
+    startTimers();
+  }
+
+  /* Store cleanup for close */
+  vid._cleanupBlob = cleanupBlob;
+}
+
+/* ── Showreel ── */
+function openShowreel() {
+  loadVideoInLightbox('showreel.mp4', '作品集锦 &middot; Showreel');
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
-// Lightbox toolbar buttons
+/* ── Lightbox toolbar ── */
 function lbToolbar() {
   return '<div class="lightbox-toolbar">'
     + '<button class="lb-btn" onclick="toggleMaximize(event)" title="最大化">'
@@ -663,7 +823,7 @@ function toggleFullscreen(e) {
   else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
 }
 
-// Gallery navigation for still images
+/* ── Gallery navigation for still images ── */
 var galleryCards = [];
 var galleryIdx = -1;
 
@@ -701,38 +861,14 @@ function galleryNext(e) {
   else showGalleryItem(0);
 }
 
-// Open card (video or still)
+/* ── Open card (video or still) ── */
 function openCard(el) {
   const type = el.getAttribute('data-type');
   const title = el.getAttribute('data-title') || '';
-  const inner = document.getElementById('lightboxInner');
 
   if (type === 'video') {
     const videoFile = el.getAttribute('data-video');
-    const src = vidUrl(videoFile);
-    var sources = '<source src="' + src + '" type="video/mp4">';
-    if (IN_REPO[videoFile]) sources += '<source src="videos/' + videoFile + '" type="video/mp4">';
-    inner.innerHTML = lbToolbar()
-      + '<video id="lbVideo" class="loading" controls autoplay playsinline preload="auto" controlsList="nodownload" disablePictureInPicture oncontextmenu="return false">'
-      + sources
-      + '</video>'
-      + '<div id="lbLoading" style="text-align:center;padding:60px 20px;">'
-      + '<div style="width:32px;height:32px;border:2px solid rgba(255,255,255,0.15);border-top-color:rgba(255,255,255,0.6);border-radius:50%;animation:lbSpin 0.8s linear infinite;margin:0 auto;"></div>'
-      + '<p style="color:rgba(255,255,255,0.4);margin:16px 0 0;font-size:13px;">视频加载中…</p></div>'
-      + '<div id="lbFallback" style="display:none;text-align:center;padding:60px 20px;">'
-      + '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-      + '<p style="color:rgba(255,255,255,0.5);margin:20px 0 0;font-size:14px;line-height:1.6;">视频加载失败，请检查网络连接<br><span style="font-size:12px;color:rgba(255,255,255,0.3);">如使用境外网络，可能需要稍后重试</span></p>'
-      + '</div>'
-      + '<div class="lightbox-title">' + title + '</div>';
-    var vid = document.getElementById('lbVideo');
-    var srcEl = vid.querySelector('source');
-    function hideLoading() { var ld = document.getElementById('lbLoading'); if(ld) ld.style.display='none'; var v = document.getElementById('lbVideo'); if(v) v.classList.remove('loading'); }
-    function showFallback() { hideLoading(); vid.style.display = 'none'; document.getElementById('lbFallback').style.display = 'block'; }
-    srcEl.addEventListener('error', showFallback);
-    vid.addEventListener('error', showFallback);
-    vid.addEventListener('loadeddata', hideLoading);
-    var loadTimer = setTimeout(function() { if (vid.readyState === 0 && vid.networkState !== 1) showFallback(); }, 20000);
-    vid.addEventListener('loadeddata', function() { clearTimeout(loadTimer); });
+    loadVideoInLightbox(videoFile, title);
   } else if (type === 'still') {
     initGallery();
     var idx = galleryCards.indexOf(el);
@@ -745,16 +881,15 @@ function openCard(el) {
 }
 
 function stopAllMedia() {
-  // Stop lightbox video (if any)
   var vid = document.getElementById('lbVideo');
-  if (vid) { vid.pause(); vid.currentTime = 0; vid.src = ''; vid.load(); }
-  // Remove iframes to stop Bilibili playback
+  if (vid) {
+    if (vid._cleanupBlob) vid._cleanupBlob();
+    vid.pause(); vid.currentTime = 0; vid.src = ''; vid.load();
+  }
   var iframes = document.querySelectorAll('#lightboxInner iframe');
   iframes.forEach(function(f) { f.src = 'about:blank'; });
-  // Exit fullscreen if active
   if (document.fullscreenElement) document.exitFullscreen();
   else if (document.webkitFullscreenElement) document.webkitExitFullscreen();
-  // Reset gallery
   galleryIdx = -1;
 }
 
@@ -776,24 +911,20 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' && galleryIdx >= 0) galleryPrev(e);
   if (e.key === 'ArrowRight' && galleryIdx >= 0) galleryNext(e);
 });
-// Stop all media when user switches tabs or minimizes window
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopAllMedia();
 });
-// Prevent right-click save on videos and lightbox images
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'VIDEO' || (e.target.tagName === 'IMG' && e.target.closest('.lightbox-inner'))) {
     e.preventDefault();
   }
 });
-// Block Ctrl+S (save page) and Ctrl+U (view source)
 document.addEventListener('keydown', function(e) {
   if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) {
     e.preventDefault();
     return false;
   }
 });
-// Prevent drag on videos and images
 document.addEventListener('dragstart', function(e) {
   if (e.target.tagName === 'VIDEO' || e.target.tagName === 'IMG') {
     e.preventDefault();
